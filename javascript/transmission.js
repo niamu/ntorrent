@@ -25,8 +25,6 @@ Transmission.prototype =
 		// Initialize the helper classes
 		this.remote = new TransmissionRemote(this);
 		this.inspector = new Inspector(this, this.remote);
-		this.prefsDialog = new PrefsDialog(this.remote);
-		$(this.prefsDialog).bind('closed', $.proxy(this.onPrefsDialogClosed,this));
 
 		this.isMenuEnabled = !isMobileDevice;
 
@@ -48,8 +46,6 @@ Transmission.prototype =
 		$('#toolbar-start-all').click($.proxy(this.startAllClicked,this));
 		$('#toolbar-remove').click($.proxy(this.removeClicked,this));
 		$('#toolbar-open').click($.proxy(this.openTorrentClicked,this));
-
-		$('#prefs-button').click($.proxy(this.togglePrefsDialogClicked,this));
 
 		$('#upload_confirm_button').click($.proxy(this.confirmUploadClicked,this));
 		$('#upload_cancel_button').click($.proxy(this.hideUploadDialog,this));
@@ -82,11 +78,7 @@ Transmission.prototype =
 			$('#inspector_link').click( $.proxy(this.toggleInspector,this) );
 
 			this.setupSearchBox();
-			this.createContextMenu();
 		}
-
-		if (this.isMenuEnabled)
-			this.createSettingsMenu();
  
 		e = {};
 		e.torrent_list              = $('#torrent_list')[0];
@@ -131,14 +123,6 @@ Transmission.prototype =
 	{
 		Prefs.getClutchPrefs(this);
 
-		if (this.isMenuEnabled)
-		{
-			$('#sort_by_' + this[Prefs._SortMethod]).selectMenuItem();
-
-			if (this[Prefs._SortDirection] === Prefs._SortDescending)
-				$('#reverse_sort_order').selectMenuItem();
-		}
-
 		this.initCompactMode();
 	},
 
@@ -169,59 +153,6 @@ Transmission.prototype =
 				}
 			});
 		}
-	},
-
-	/**
-	 * Create the torrent right-click menu
-	 */
-	createContextMenu: function() {
-		var tr = this;
-		var bindings = {
-			context_pause_selected:       function() { tr.stopSelectedTorrents(); },
-			context_resume_selected:      function() { tr.startSelectedTorrents(false); },
-			context_resume_now_selected:  function() { tr.startSelectedTorrents(true); },
-			context_move:                 function() { tr.moveSelectedTorrents(false); },
-			context_remove:               function() { tr.removeSelectedTorrents(); },
-			context_removedata:           function() { tr.removeSelectedTorrentsAndData(); },
-			context_verify:               function() { tr.verifySelectedTorrents(); },
-			context_reannounce:           function() { tr.reannounceSelectedTorrents(); },
-			context_move_top:             function() { tr.moveTop(); },
-			context_move_up:              function() { tr.moveUp(); },
-			context_move_down:            function() { tr.moveDown(); },
-			context_move_bottom:          function() { tr.moveBottom(); },
-			context_select_all:           function() { tr.selectAll(); },
-			context_deselect_all:         function() { tr.deselectAll(); }
-		};
-
-		// Set up the context menu
-		$('ul#torrent_list').contextMenu('torrent_context_menu', {
-			bindings:          bindings,
-			menuStyle:         { width: '310px', backgroundColor: '#fff', border: 'none', padding: '5px 0', textAlign: 'left' },
-			itemStyle:         { backgroundColor: 'transparent', margin: '0', padding: '3px 10px 3px 20px', color: '#000', cursor: 'default', border: 'none'},
-			itemHoverStyle:    { backgroundColor: '#24e', color: '#fff', border: 'none'},
-			shadow:            false,
-			boundingElement:   $('div#torrent_container'),
-			boundingRightPad:  20,
-			boundingBottomPad: 5,
-			onContextMenu: function(ev) {
-				var element = $(ev.target).closest('.torrent')[0];
-				var i = $('#torrent_list > li').index(element);
-				if ((i!==-1) && !tr._rows[i].isSelected())
-					tr.setSelectedRow(tr._rows[i]);
-				return true;
-			}
-		});
-	},
-
-	createSettingsMenu: function() {
-		$('#settings_menu').transMenu({
-			selected_char: '&#x2714;',
-			direction: 'up',
-			onClick: $.proxy(this.onMenuClicked,this)
-		});
-
-		$('#unlimited_download_rate').selectMenuItem();
-		$('#unlimited_upload_rate').selectMenuItem();
 	},
 
 
@@ -578,136 +509,9 @@ Transmission.prototype =
 	 *
 	 *--------------------------------------------*/
 
-	onPrefsDialogClosed: function() {
-		$('#prefs-button').removeClass('selected');
-	},
-
-	togglePrefsDialogClicked: function(ev)
-	{
-		var e = $('#prefs-button');
-
-		if (e.hasClass('selected'))
-			this.prefsDialog.close();
-		else {
-			e.addClass('selected');
-			this.prefsDialog.show();
-		}
-	},
-
 	setFilterText: function(search) {
 		this.filterText = search ? search.trim() : null;
 		this.refilter(true);
-	},
-
-	setSortMethod: function(sort_method) {
-		this.setPref(Prefs._SortMethod, sort_method);
-		this.refilter(true);
-	},
-
-	setSortDirection: function(direction) {
-		this.setPref(Prefs._SortDirection, direction);
-		this.refilter(true);
-	},
-
-	onMenuClicked: function(ev)
-	{
-		var o, dir,
-		    id = ev.target.id,
-		    remote = this.remote,
-		    element = $(ev.target);
-
-		if (element.hasClass('sort-mode'))
-		{
-			element.parent().find('.sort-mode').each(function() {
-				element.parent().deselectMenuItem();
-			});
-			element.selectMenuItem();
-			this.setSortMethod(id.replace(/sort_by_/, ''));
-		}
-		else if (element.hasClass('upload-speed'))
-		{
-			o = {};
-			o[RPC._UpSpeedLimit] = parseInt(ev.target.innerHTML);
-			o[RPC._UpSpeedLimited] = true;
-			remote.savePrefs(o);
-		}
-		else if (element.hasClass('download-speed'))
-		{
-			o = {};
-			o[RPC._DownSpeedLimit] = parseInt(ev.target.innerHTML);
-			o[RPC._DownSpeedLimited] = true;
-			remote.savePrefs(o);
-		}
-		else switch (id)
-		{
-			case 'statistics':
-				this.showStatsDialog();
-				break;
-
-			case 'about-button':
-				o = 'Transmission ' + this.serverVersion;
-				$('#about-dialog #about-title').html(o);
-				$('#about-dialog').dialog({
-					title: 'About',
-					show: 'fade',
-					hide: 'fade'
-				});
-				break;
-
-			case 'homepage':
-				window.open('http://www.transmissionbt.com/');
-				break;
-
-			case 'tipjar':
-				window.open('http://www.transmissionbt.com/donate.php');
-				break;	
-
-			case 'unlimited_download_rate':
-				o = {};
-				o[RPC._DownSpeedLimited] = false;
-				remote.savePrefs(o);
-				break;
-
-			case 'limited_download_rate':
-				o = {};
-				o[RPC._DownSpeedLimited] = true;
-				remote.savePrefs(o);
-				break;
-
-			case 'unlimited_upload_rate':
-				o = {};
-				o[RPC._UpSpeedLimited] = false;
-				remote.savePrefs(o);
-				break;
-
-			case 'limited_upload_rate':
-				o = {};
-				o[RPC._UpSpeedLimited] = true;
-				remote.savePrefs(o);
-				break;
-
-			case 'reverse_sort_order':
-				if (element.menuItemIsSelected()) {
-					dir = Prefs._SortAscending;
-					element.deselectMenuItem();
-				} else {
-					dir = Prefs._SortDescending;
-					element.selectMenuItem();
-				}
-				this.setSortDirection(dir);
-				break;
-
-			case 'toggle_notifications':
-				Notifications && Notifications.toggle();
-				break;
-
-			default:
-				console.log('unhandled: ' + id);
-				break;
-
-		}
-		$('#settings_menu').trigger('closemenu');
-		ev.stopImmediatePropagation();
 	},
 
 
@@ -818,8 +622,6 @@ Transmission.prototype =
 		// Prevents click carrying to parent element
 		// which deselects all on click
 		ev.stopPropagation();
-		// but still hide the context menu if it is showing
-		$('#jqContextMenu').hide();
 
 		if (isMobileDevice) {
 			if (row.isSelected())
@@ -863,11 +665,6 @@ Transmission.prototype =
 			}
 			this.refilter();
 		}
-	},
-
-	shouldAddedTorrentsStart: function()
-	{
-		return this.prefsDialog.shouldAddedTorrentsStart();
 	},
 
 	/*
@@ -1081,8 +878,6 @@ Transmission.prototype =
 
 		this.serverVersion = o.version;
 
-		this.prefsDialog.set(o);
-
 		if (RPC._TurtleState in o)
 		{
 			b = o[RPC._TurtleState];
@@ -1097,33 +892,6 @@ Transmission.prototype =
 			e.attr('title', text);
 		}
 
-		if (this.isMenuEnabled && (RPC._DownSpeedLimited in o)
-		                       && (RPC._DownSpeedLimit in o))
-		{
-			limit = o[RPC._DownSpeedLimit];
-			limited = o[RPC._DownSpeedLimited];
-
-			e = menu.find('#limited_download_rate');
-                        e.html('Limit (' + fmt.speed(limit) + ')');
-
-                        if (!limited)
-                        	e = menu.find('#unlimited_download_rate');
-                        e.deselectMenuSiblings().selectMenuItem();
-		}
-
-		if (this.isMenuEnabled && (RPC._UpSpeedLimited in o)
-		                       && (RPC._UpSpeedLimit in o))
-		{
-			limit = o[RPC._UpSpeedLimit];
-			limited = o[RPC._UpSpeedLimited];
-
-			e = menu.find('#limited_upload_rate');
-                        e.html('Limit (' + fmt.speed(limit) + ')');
-
-                        if (!limited)
-                        	e = menu.find('#unlimited_upload_rate');
-                        e.deselectMenuSiblings().selectMenuItem();
-		}
 	},
 
 	updateStatusbar: function()
