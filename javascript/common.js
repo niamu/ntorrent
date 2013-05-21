@@ -181,7 +181,7 @@ Prefs._CompactDisplayState= 'compact_display_state';
 Prefs._Defaults =
 {
 	'filter': 'all',
-	'refresh_rate' : 5,
+	'refresh_rate' : 1,
 	'sort_direction': 'ascending',
 	'sort_method': 'name',
 	'turtle-state' : false,

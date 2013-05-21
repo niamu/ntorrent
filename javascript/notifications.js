@@ -20,7 +20,7 @@ $(document).ready(function () {
 		notification.show(); 
 		setTimeout(function () {
 		  notification.cancel();
-		}, 5000);
+		}, 1000);
 	};
   });
 

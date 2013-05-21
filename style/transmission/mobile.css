@@ -792,7 +792,7 @@ div.torrent_footer {
       /* Opera 11.10+ */
       background-position: center;
       background-repeat: no-repeat; }
-  div.torrent_footer #turtle-button {
+  #turtle-button {
     -moz-border-radius: 5px;
     border-radius: 5px;
     background-color: #dddddd;
@@ -810,7 +810,7 @@ div.torrent_footer {
     /* Opera 11.10+ */
     background-position: center;
     background-repeat: no-repeat; }
-    div.torrent_footer #turtle-button:active, div.torrent_footer #turtle-button.selected {
+    #turtle-button:active, #turtle-button.selected {
       background-color: #e6e6ff;
       background-image: url("images/turtle.png");
       /* fallback */
@@ -826,7 +826,7 @@ div.torrent_footer {
       /* Opera 11.10+ */
       background-position: center;
       background-repeat: no-repeat; }
-    div.torrent_footer #turtle-button:active, div.torrent_footer #turtle-button.selected {
+    #turtle-button:active, #turtle-button.selected {
       background-color: #e6e6ff;
       background-image: url("images/blue-turtle.png");
       /* fallback */

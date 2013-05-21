@@ -437,7 +437,7 @@ Transmission.prototype =
 	{
 		var i, uri, uris=null,
 		    types = ["text/uri-list", "text/plain"],
-		    paused = this.shouldAddedTorrentsStart();
+		    paused = true;
 
 		if (!ev.dataTransfer || !ev.dataTransfer.types)
 			return true;
@@ -480,7 +480,7 @@ Transmission.prototype =
 
 	removeClicked: function(ev) {
 		if (this.isButtonEnabled(ev)) {
-			this.removeSelectedTorrents();
+			this.removeSelectedTorrentsAndData();
 			this.hideMobileAddressbar();
 		}
 	},
@@ -677,7 +677,7 @@ Transmission.prototype =
 		if (! confirmed) {
 			$('input#torrent_upload_file').attr('value', '');
 			$('input#torrent_upload_url').attr('value', '');
-			$('input#torrent_auto_start').attr('checked', this.shouldAddedTorrentsStart());
+			$('input#torrent_auto_start').attr('checked', true);
 			$('#upload_container').show();
 			$('#torrent_upload_url').focus();
 
@@ -685,7 +685,7 @@ Transmission.prototype =
 		} else {
 			var args = {};
 			var remote = this.remote;
-			var paused = !$('#torrent_auto_start').is(':checked');
+			var paused = false;
 			if ('' != $('#torrent_upload_url').val()) {
 				remote.addTorrentByUrl($('#torrent_upload_url').val(), { paused: paused });
 			} else {
@@ -914,7 +914,7 @@ Transmission.prototype =
 		$('#speed-dn-label').text( fmt.speedBps( d ) );
 
 		// visible torrents
-		$('#filter-count').text( fmt.countString('Transfer','Transfers',this._rows.length ) );
+		$('#filter-count').text( fmt.countString('Torrent','Torrents',this._rows.length ) );
 	},
 
 	setEnabled: function(key, flag)
@@ -936,9 +936,9 @@ Transmission.prototype =
 
 		// build the new html
 		if (!this.filterTracker)
-			str = '<option value="all" selected="selected">All</option>';
+			str = '<option value="all" selected="selected">All Trackers</option>';
 		else
-			str = '<option value="all">All</option>';
+			str = '<option value="all">All Trackers</option>';
 		for (i=0; name=names[i]; ++i) {
 			o = trackers[name];
 			str += '<option value="' + o.domain + '"';
@@ -1290,7 +1290,7 @@ Transmission.prototype =
 	},
 	onCompactModeChanged: function()
 	{
-		var compact = this[Prefs._CompactDisplayState];
+		var compact = false;
 
 		// update the ui: footer button
 		$("#compact-button").toggleClass('selected',compact);
@@ -1313,7 +1313,7 @@ Transmission.prototype =
 		delete this.statsInterval;
 		if (enabled) {
 			var callback = $.proxy(this.loadDaemonStats,this),
-                            msec = 5000;
+                            msec = 1000;
 			this.statsInterval = setInterval(callback, msec);
 		}
 	},
