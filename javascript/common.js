@@ -25,8 +25,6 @@ $.fn.tabbedDialog = function (dialog_opts) {
 	this.tabs({selected: 0});
 	this.dialog(dialog_opts);
 	this.find('.ui-tab-dialog-close').append(this.parent().find('.ui-dialog-titlebar-close'));
-	this.find('.ui-tab-dialog-close').css({'position':'absolute','right':'0', 'top':'16px'});
-	this.find('.ui-tab-dialog-close > a').css({'float':'none','padding':'0'});
 	var tabul = this.find('ul:first');
 	this.parent().addClass('ui-tabs').prepend(tabul).draggable('option','handle',tabul); 
 	this.siblings('.ui-dialog-titlebar').remove();
@@ -34,41 +32,9 @@ $.fn.tabbedDialog = function (dialog_opts) {
 }
 
 $(document).ready(function() {
-
-	// IE8 and below don’t support ES5 Date.now()
-	if (!Date.now) {
-		Date.now = function() {
-			return +new Date();
-		};
-	}
-
-	// IE specific fixes here
-	if ($.browser.msie) {
-		try {
-			document.execCommand("BackgroundImageCache", false, true);
-		} catch(err) {}
-		$('.dialog_container').css('height',$(window).height()+'px');
-	}
-
-	if ($.browser.safari) {
-		// Move search field's margin down for the styled input
-		$('#torrent_search').css('margin-top', 3);
-	}
 	if (isMobileDevice){
 		window.onload = function(){ setTimeout(function() { window.scrollTo(0,1); },500); };
 		window.onorientationchange = function(){ setTimeout(function() { window.scrollTo(0,1); },100); };
-		if (window.navigator.standalone)
-			// Fix min height for isMobileDevice when run in full screen mode from home screen
-			// so the footer appears in the right place
-			$('body div#torrent_container').css('min-height', '338px');
-		$("label[for=torrent_upload_url]").text("URL: ");
-	} else {
-		// Fix for non-Safari-3 browsers: dark borders to replace shadows.
-		// Opera messes up the menu if we use a border on .trans_menu
-		// div.outerbox so use ul instead
-		$('.trans_menu ul, div#jqContextMenu, div.dialog_container div.dialog_window').css('border', '1px solid #777');
-		// and this kills the border we used to have
-		$('.trans_menu div.outerbox').css('border', 'none');
 	}
 
 	// Initialise the dialog controller
@@ -180,10 +146,10 @@ Prefs._CompactDisplayState= 'compact_display_state';
 
 Prefs._Defaults =
 {
-	'filter': 'all',
+	'filter': 'active',
 	'refresh_rate' : 1,
-	'sort_direction': 'ascending',
-	'sort_method': 'name',
+	'sort_direction': 'descending',
+	'sort_method': 'percent_completed',
 	'turtle-state' : false,
 	'compact_display_state' : false
 };

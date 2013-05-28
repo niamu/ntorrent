@@ -50,11 +50,7 @@ Transmission.prototype =
 		$('#upload_confirm_button').click($.proxy(this.confirmUploadClicked,this));
 		$('#upload_cancel_button').click($.proxy(this.hideUploadDialog,this));
 
-		$('#move_confirm_button').click($.proxy(this.confirmMoveClicked,this));
-		$('#move_cancel_button').click($.proxy(this.hideMoveDialog,this));
-
 		$('#turtle-button').click($.proxy(this.toggleTurtleClicked,this));
-		$('#compact-button').click($.proxy(this.toggleCompactClicked,this));
 
 		// tell jQuery to copy the dataTransfer property from events over if it exists
 		jQuery.event.props.push("dataTransfer");
@@ -111,11 +107,6 @@ Transmission.prototype =
 		}, this, async);
 	},
 
-	loadImages: function() {
-		for (var i=0, row; row=arguments[i]; ++i)
-			jQuery("<img>").attr("src", row);
-	},
-
 	/*
 	 * Load the clutch prefs and init the GUI according to those prefs
 	 */
@@ -123,7 +114,8 @@ Transmission.prototype =
 	{
 		Prefs.getClutchPrefs(this);
 
-		this.initCompactMode();
+		var compact = false;
+		this.torrentRenderer = new TorrentRendererFull();
 	},
 
 	/*
@@ -136,23 +128,6 @@ Transmission.prototype =
 		search_box.bind('keyup click', function() {
 			tr.setFilterText(this.value);
 		});
-		if (!$.browser.safari)
-		{
-			search_box.addClass('blur');
-			search_box[0].value = 'Filter';
-			search_box.bind('blur', function() {
-				if (this.value === '') {
-					$(this).addClass('blur');
-					this.value = 'Filter';
-					tr.setFilterText(null);
-				}
-			}).bind('focus', function() {
-				if ($(this).is('.blur')) {
-					this.value = '';
-					$(this).removeClass('blur');
-				}
-			});
-		}
 	},
 
 
@@ -1262,43 +1237,6 @@ Transmission.prototype =
 		}
 
 		return ret;
-	},
-
-	/***
-	****
-	****  Compact Mode
-	****
-	***/
-
-	toggleCompactClicked: function()
-	{
-		this.setCompactMode(!this[Prefs._CompactDisplayState]);
-	},
-	setCompactMode: function(is_compact)
-	{
-		var key = Prefs._CompactDisplayState,
-		    was_compact = this[key];
-
-		if (was_compact !== is_compact) {
-			this.setPref(key, is_compact);
-			this.onCompactModeChanged();
-		}
-	},
-	initCompactMode: function()
-	{
-		this.onCompactModeChanged();
-	},
-	onCompactModeChanged: function()
-	{
-		var compact = false;
-
-		// update the ui: footer button
-		$("#compact-button").toggleClass('selected',compact);
-
-		// update the ui: torrent list
-		this.torrentRenderer = compact ? new TorrentRendererCompact()
-		                               : new TorrentRendererFull();
-		this.refilter(true);
 	},
 
 	/***

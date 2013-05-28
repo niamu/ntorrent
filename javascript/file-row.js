@@ -11,18 +11,12 @@ function FileRow(torrent, depth, name, indices, even)
 		have: 0,
 		indices: [],
 		isWanted: true,
-		priorityLow: false,
-		priorityNormal: false,
-		priorityHigh: false,
 		me: this,
 		size: 0,
 		torrent: null
 	},
 
 	elements = {
-		priority_low_button: null,
-		priority_normal_button: null,
-		priority_high_button: null,
 		progress: null,
 		root: null
 	},
@@ -44,12 +38,7 @@ function FileRow(torrent, depth, name, indices, even)
 	refreshProgressHTML = function()
 	{
 		var pct = 100 * (fields.size ? (fields.have / fields.size) : 1.0),
-		    c = [ Transmission.fmt.size(fields.have),
-			  ' of ',
-			  Transmission.fmt.size(fields.size),
-			  ' (',
-			  Transmission.fmt.percentString(pct),
-			  '%)' ].join('');
+		    c = [ Transmission.fmt.percentString(pct), '%' ].join('');
 		setTextContent(elements.progress, c);
 	},
 	refreshImpl = function() {
@@ -57,10 +46,7 @@ function FileRow(torrent, depth, name, indices, even)
 		    file,
 		    have = 0,
 		    size = 0,
-		    wanted = false,
-		    low = false,
-		    normal = false,
-		    high = false;
+		    wanted = false;
 
 		// loop through the file_indices that affect this row
 		for (i=0; i<fields.indices.length; ++i) {
@@ -68,11 +54,6 @@ function FileRow(torrent, depth, name, indices, even)
 			have += file.bytesCompleted;
 			size += file.length;
 			wanted |= file.wanted;
-			switch (file.priority) {
-				case -1: low = true; break;
-				case  0: normal = true; break;
-				case  1: high = true; break;
-			}
 		}
 
 		if ((fields.have != have) || (fields.size != size)) {
@@ -84,21 +65,6 @@ function FileRow(torrent, depth, name, indices, even)
 		if (fields.isWanted !== wanted) {
 			fields.isWanted = wanted;
 			refreshWantedHTML();
-		}
-
-		if (fields.priorityLow !== low) {
-			fields.priorityLow = low;
-			$(elements.priority_low_button).toggleClass('selected', low);
-		}
-
-		if (fields.priorityNormal !== normal) {
-			fields.priorityNormal = normal;
-			$(elements.priority_normal_button).toggleClass('selected', normal);
-		}
-
-		if (fields.priorityHigh !== high) {
-			fields.priorityHigh = high;
-			$(elements.priority_high_button).toggleClass('selected', high);
 		}
 	},
 
@@ -125,33 +91,6 @@ function FileRow(torrent, depth, name, indices, even)
 		root.appendChild(e);
 
 		e = document.createElement('div');
-		e.className = 'file-priority-radiobox';
-		box = e;
-
-			e = document.createElement('div');
-			e.className = 'low';
-			e.title = 'Low Priority';
-			$(e).click(function(){ firePriorityChanged(-1); });
-			elements.priority_low_button = e;
-			box.appendChild(e);
-
-			e = document.createElement('div');
-			e.className = 'normal';
-			e.title = 'Normal Priority';
-			$(e).click(function(){ firePriorityChanged(0); });
-			elements.priority_normal_button = e;
-			box.appendChild(e);
-
-			e = document.createElement('div');
-			e.title = 'High Priority';
-			e.className = 'high';
-			$(e).click(function(){ firePriorityChanged(1); });
-			elements.priority_high_button = e;
-			box.appendChild(e);
-
-		root.appendChild(box);
-
-		e = document.createElement('div');
 		e.className = "inspector_torrent_file_list_entry_name";
 		setTextContent(e, name);
 		$(e).click(function(){ fireNameClicked(-1); });
@@ -163,17 +102,12 @@ function FileRow(torrent, depth, name, indices, even)
 		$(e).click(function(){ fireNameClicked(-1); });
 		elements.progress = e;
 
-		$(root).css('margin-left', '' + (depth*16) + 'px');
-
 		refreshImpl();
 		return root;
 	},
 
 	fireWantedChanged = function(do_want) {
 		$(fields.me).trigger('wantedToggled',[ fields.indices, do_want ]);
-	},
-	firePriorityChanged = function(priority) {
-		$(fields.me).trigger('priorityToggled',[ fields.indices, priority ]);
 	},
 	fireNameClicked = function() {
 		$(fields.me).trigger('nameClicked',[ fields.me, fields.indices ]);

@@ -61,51 +61,27 @@ Torrent.Fields.Stats = [
 	'eta',
 	'isFinished',
 	'isStalled',
-	'leftUntilDone',
 	'metadataPercentComplete',
-	'peersConnected',
-	'peersGettingFromUs',
-	'peersSendingToUs',
 	'percentDone',
-	'queuePosition',
 	'rateDownload',
 	'rateUpload',
 	'recheckProgress',
-	'seedRatioMode',
-	'seedRatioLimit',
-	'sizeWhenDone',
 	'status',
 	'trackers',
-	'downloadDir',
-	'uploadedEver',
 	'uploadRatio',
-	'webseedsSendingToUs'
 ];
 
 // fields used by the inspector which only need to be loaded once
 Torrent.Fields.InfoExtra = [
-	'comment',
-	'creator',
-	'dateCreated',
 	'files',
-	'hashString',
-	'isPrivate',
-	'pieceCount',
-	'pieceSize'
+	'hashString'
 ];
 
 // fields used in the inspector which need to be periodically refreshed
 Torrent.Fields.StatsExtra = [
-	'activityDate',
-	'corruptEver',
-	'desiredAvailable',
-	'downloadedEver',
 	'fileStats',
 	'haveUnchecked',
-	'haveValid',
-	'peers',
-	'startDate',
-	'trackerStats'
+	'haveValid'
 ];
 
 /***
