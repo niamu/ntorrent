@@ -148,19 +148,9 @@ TorrentRendererFull.prototype =
 		    is_done = t.isDone() || t.isSeeding();
 
 		if (is_done) {
-			if (totalSize === sizeWhenDone) // seed: '698.05 MiB'
-				c = [ Transmission.fmt.size(totalSize) ];
-			else // partial seed: '127.21 MiB of 698.05 MiB (18.2%)'
-				c = [ t.getPercentDoneStr(), '%' ];
-			// append UL stats: ', uploaded 8.59 GiB (Ratio: 12.3)'
-			c.push(' (Ratio ',
-			        Transmission.fmt.ratioString(t.getUploadRatio()),
-			        ')');
-			c.push(' - ',
-				  TorrentRendererHelper.formatUL(t));
+			c = [ TorrentRendererHelper.formatUL(t) ];
 		} else { // not done yet
-			c = [ TorrentRendererHelper.formatDL(t), ' ',
-				  TorrentRendererHelper.formatUL(t) ];
+			c = [ TorrentRendererHelper.formatDL(t) ];
 		}
 
 		// maybe append eta

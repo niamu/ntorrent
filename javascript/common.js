@@ -192,6 +192,10 @@ Prefs.getValue = function(key, fallback)
 	if (!val) val = fallback;
 	else if (val === 'true') val = true;
 	else if (val === 'false') val = false;
+
+	if (key == 'filter'){
+		val = 'active';
+	}
 	return val;
 };
 

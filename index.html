@@ -1,120 +1,118 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<link href="./images/favicon.ico" rel="icon" />
-		<link href="./images/favicon.png" rel="shortcut icon" />
-		<link rel="apple-touch-icon" href="./images/webclip-icon.png"/>
-		<script type="text/javascript" src="./javascript/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="./javascript/jquery/jqueryui-1.8.16.min.js"></script>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<link href="./images/favicon.ico" rel="icon" />
+	<link href="./images/favicon.png" rel="shortcut icon" />
+	<link rel="apple-touch-icon" href="./images/webclip-icon.png"/>
+	<script type="text/javascript" src="./javascript/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="./javascript/jquery/jqueryui-1.8.16.min.js"></script>
 
-		<link media="only screen and (max-device-width: 480px)" href="./style/transmission/mobile.css" type= "text/css" rel="stylesheet" />
-		<link media="screen and (min-device-width: 481px)" href="./style/transmission/common.css" type="text/css" rel="stylesheet" />
+	<link media="only screen and (max-device-width: 480px)" href="./style/transmission/mobile.css" type= "text/css" rel="stylesheet" />
+	<link media="screen and (min-device-width: 481px)" href="./style/transmission/common.css" type="text/css" rel="stylesheet" />
 
-		<script type="text/javascript" src="./javascript/jquery/jquery.form.min.js"></script>
-		<script type="text/javascript" src="./javascript/jquery/json2.min.js"></script>
-		<script type="text/javascript" src="./javascript/common.js"></script>
-		<script type="text/javascript" src="./javascript/inspector.js"></script>
-		<script type="text/javascript" src="./javascript/remote.js"></script>
-		<script type="text/javascript" src="./javascript/transmission.js"></script>
-		<script type="text/javascript" src="./javascript/torrent.js"></script>
-		<script type="text/javascript" src="./javascript/torrent-row.js"></script>
-		<script type="text/javascript" src="./javascript/file-row.js"></script>
-		<script type="text/javascript" src="./javascript/dialog.js"></script>
-		<script type="text/javascript" src="./javascript/formatter.js"></script>
-		<script type="text/javascript" src="./javascript/notifications.js"></script>
-		<title>Transmission</title>
-	</head>
-	<body id="transmission_body">
+	<script type="text/javascript" src="./javascript/jquery/jquery.form.min.js"></script>
+	<script type="text/javascript" src="./javascript/jquery/json2.min.js"></script>
+	<script type="text/javascript" src="./javascript/common.js"></script>
+	<script type="text/javascript" src="./javascript/inspector.js"></script>
+	<script type="text/javascript" src="./javascript/remote.js"></script>
+	<script type="text/javascript" src="./javascript/transmission.js"></script>
+	<script type="text/javascript" src="./javascript/torrent.js"></script>
+	<script type="text/javascript" src="./javascript/torrent-row.js"></script>
+	<script type="text/javascript" src="./javascript/file-row.js"></script>
+	<script type="text/javascript" src="./javascript/dialog.js"></script>
+	<script type="text/javascript" src="./javascript/formatter.js"></script>
+	<script type="text/javascript" src="./javascript/notifications.js"></script>
+	<title>Transmission</title>
+</head>
+<body id="transmission_body">
 
-		<div id="toolbar">
-			<div id="toolbar-open" title="Open Torrent"></div>
-			<div id="toolbar-remove" title="Remove Selected Torrents"></div>
-			<div id="toolbar-separator"></div>
-			<div id="toolbar-start-all" title="Start All Torrents"></div>
-			<div id="toolbar-pause-all" title="Pause All Torrents"></div>
-			<div id="toolbar-inspector" title="Toggle Inspector"></div>
+	<div id="toolbar">
+		<div id="toolbar-open" title="Open Torrent"></div>
+		<div id="toolbar-remove" title="Remove Selected Torrents"></div>
+		<div id="toolbar-separator"></div>
+		<div id="toolbar-start-all" title="Start All Torrents"></div>
+		<div id="toolbar-pause-all" title="Pause All Torrents"></div>
+		<div id="toolbar-inspector" title="Toggle Inspector"></div>
+	</div>
+
+	<div id="statusbar">
+		<div id='filter'>
+			<select id="filter-mode">
+				<option value="all">All States</option>
+				<option value="active">Active</option>
+				<option value="downloading">Downloading</option>
+				<option value="seeding">Seeding</option>
+				<option value="paused">Paused</option>
+				<option value="finished">Finished</option>
+			</select>
+			<select id="filter-tracker"></select>
+			<input type="search" id="torrent_search" placeholder="Filter" />
+			<span id="filter-count">&nbsp;</span>
 		</div>
 
-		<div id="statusbar">
-			<div id='filter'>
-				<select id="filter-mode">
-					<option value="all">All States</option>
-					<option value="active">Active</option>
-					<option value="downloading">Downloading</option>
-					<option value="seeding">Seeding</option>
-					<option value="paused">Paused</option>
-					<option value="finished">Finished</option>
-				</select>
-				<select id="filter-tracker"></select>
-				<input type="search" id="torrent_search" placeholder="Filter" />
-				<span id="filter-count">&nbsp;</span>
+		<div id="turtle-button" title="Alternative Speed Limits">&nbsp;</div>
+
+		<div id='speed-info'>
+			<div id='speed-dn-container'>
+				<div id='speed-dn-icon'></div>
+				<div id='speed-dn-label'></div>
 			</div>
-
-			<div id="turtle-button" title="Alternative Speed Limits">&nbsp;</div>
-
-			<div id='speed-info'>
-				<div id='speed-dn-container'>
-					<div id='speed-dn-icon'></div>
-					<div id='speed-dn-label'></div>
-				</div>
-				<div id='speed-up-container'>
-					<div id='speed-up-icon'></div>
-					<div id='speed-up-label'></div>
-				</div>
-			</div>
-		</div>
-
-		<div id="torrent_inspector" style="display:none;">
-
-			<div id="inspector_header">
-				<div id="torrent_inspector_name"></div>
-				<span id="torrent_inspector_size"></span>
-			</div>
-
-			<div class="inspector-page" id="inspector-page-files">
-					<ul id="inspector_file_list">
-					</ul>
-			</div><!-- id="inspector_tab_files_container" -->
-
-		</div>
-
-		<div id="torrent_container">
-			<ul class="torrent_list" id="torrent_list"></ul>
-		</div>
-
-		<div class="dialog_container" id="dialog_container" style="display:none;">
-			<div class="dialog_top_bar"></div>
-			<div class="dialog_window">
-				<div class="dialog_logo" id="dialog_logo"></div>
-				<h2 class="dialog_heading" id="dialog_heading"></h2>
-				<div class="dialog_message" id="dialog_message"></div>
-				<a href="#confirm" id="dialog_confirm_button">Confirm</a>
-				<a href="#cancel" id="dialog_cancel_button">Cancel</a>
+			<div id='speed-up-container'>
+				<div id='speed-up-icon'></div>
+				<div id='speed-up-label'></div>
 			</div>
 		</div>
+	</div>
 
-		<div class="dialog_container" id="upload_container" style="display:none;">
-			<div class="dialog_top_bar"></div>
-			<div class="dialog_window">
-				<div class="dialog_logo" id="upload_dialog_logo"></div>
-				<h2 class="dialog_heading">Upload Torrent Files</h2>
-				<form action="#" method="post" id="torrent_upload_form"
-					enctype="multipart/form-data" target="torrent_upload_frame">
-					<div class="dialog_message">
-						<label for="torrent_upload_file">Please select a torrent file to upload:</label>
-							<input type="file" name="torrent_files[]" id="torrent_upload_file" multiple="multiple" />
-						<label for="torrent_upload_url">Or enter a URL:</label>
-							<input type="url" id="torrent_upload_url"/>
-					</div>
-					<a href="#upload" id="upload_confirm_button">Upload</a>
-					<a href="#cancel" id="upload_cancel_button">Cancel</a>
-				</form>
-			</div>
+	<div id="torrent_inspector" style="display:none;">
+
+		<div id="inspector_header">
+			<div id="torrent_inspector_name"></div>
 		</div>
 
-		<iframe name="torrent_upload_frame" id="torrent_upload_frame" src="about:blank" ></iframe>
-	</body>
+		<div class="inspector-page" id="inspector-page-files">
+			<ul id="inspector_file_list">
+			</ul>
+		</div>
+	</div>
+
+	<div id="torrent_container">
+		<ul class="torrent_list" id="torrent_list"></ul>
+	</div>
+
+	<div class="dialog_container" id="dialog_container" style="display:none;">
+		<div class="dialog_top_bar"></div>
+		<div class="dialog_window">
+			<div class="dialog_logo" id="dialog_logo"></div>
+			<h2 class="dialog_heading" id="dialog_heading"></h2>
+			<div class="dialog_message" id="dialog_message"></div>
+			<a href="#confirm" id="dialog_confirm_button">Confirm</a>
+			<a href="#cancel" id="dialog_cancel_button">Cancel</a>
+		</div>
+	</div>
+
+	<div class="dialog_container" id="upload_container" style="display:none;">
+		<div class="dialog_top_bar"></div>
+		<div class="dialog_window">
+			<div class="dialog_logo" id="upload_dialog_logo"></div>
+			<h2 class="dialog_heading">Upload Torrent Files</h2>
+			<form action="#" method="post" id="torrent_upload_form"
+			enctype="multipart/form-data" target="torrent_upload_frame">
+			<div class="dialog_message">
+				<label for="torrent_upload_file">Please select a torrent file to upload:</label>
+				<input type="file" name="torrent_files[]" id="torrent_upload_file" multiple="multiple" />
+				<label for="torrent_upload_url">Or enter a URL:</label>
+				<input type="url" id="torrent_upload_url"/>
+			</div>
+			<a href="#upload" id="upload_confirm_button">Upload</a>
+			<a href="#cancel" id="upload_cancel_button">Cancel</a>
+		</form>
+	</div>
+</div>
+
+<iframe name="torrent_upload_frame" id="torrent_upload_frame" src="about:blank" ></iframe>
+</body>
 </html>

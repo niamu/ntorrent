@@ -823,24 +823,6 @@ Transmission.prototype =
 		scroll_timeout=null;
 	},
 
-	// Queue
-	moveTop: function() {
-		this.remote.moveTorrentsToTop(this.getSelectedTorrentIds(),
-		                              this.refreshTorrents, this);
-	},
-	moveUp: function() {
-		this.remote.moveTorrentsUp(this.getSelectedTorrentIds(),
-		                           this.refreshTorrents, this);
-	},
-	moveDown: function() {
-		this.remote.moveTorrentsDown(this.getSelectedTorrentIds(),
-		                             this.refreshTorrents, this);
-	},
-	moveBottom: function() {
-		this.remote.moveTorrentsToBottom(this.getSelectedTorrentIds(),
-		                                 this.refreshTorrents, this);
-	},
-
 	/***
 	****
 	***/

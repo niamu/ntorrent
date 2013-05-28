@@ -9,10 +9,6 @@ var RPC = {
 	_DaemonVersion          : 'version',
 	_DownSpeedLimit         : 'speed-limit-down',
 	_DownSpeedLimited       : 'speed-limit-down-enabled',
-	_QueueMoveTop           : 'queue-move-top',
-	_QueueMoveBottom        : 'queue-move-bottom',
-	_QueueMoveUp            : 'queue-move-up',
-	_QueueMoveDown          : 'queue-move-down',
 	_Root                   : '../rpc',
 	_TurtleDownSpeedLimit   : 'alt-speed-down',
 	_TurtleState            : 'alt-speed-enabled',
@@ -226,19 +222,5 @@ TransmissionRemote.prototype =
 		this.sendRequest(o, function() {
 			remote._controller.loadDaemonPrefs();
 		});
-	},
-
-	// Added queue calls
-	moveTorrentsToTop: function(torrent_ids, callback, context) {
-		this.sendTorrentActionRequests(RPC._QueueMoveTop, torrent_ids, callback, context);
-	},
-	moveTorrentsToBottom: function(torrent_ids, callback, context) {
-		this.sendTorrentActionRequests(RPC._QueueMoveBottom, torrent_ids, callback, context);
-	},
-	moveTorrentsUp: function(torrent_ids, callback, context) {
-		this.sendTorrentActionRequests(RPC._QueueMoveUp, torrent_ids, callback, context);
-	},
-	moveTorrentsDown: function(torrent_ids, callback, context) {
-		this.sendTorrentActionRequests(RPC._QueueMoveDown, torrent_ids, callback, context);
 	}
 };
