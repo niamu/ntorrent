@@ -180,7 +180,7 @@ TorrentRendererFull.prototype =
 			var uri = parseUri(announce);
 
 			uri.domain = transmission.getDomainName (uri.host);
-			root.className = "torrent " + uri.domain;
+			//root.className = "torrent " + uri.domain;
 		}
 
 		// progressbar

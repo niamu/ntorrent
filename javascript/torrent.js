@@ -61,7 +61,9 @@ Torrent.Fields.Stats = [
 	'eta',
 	'isFinished',
 	'isStalled',
-	'metadataPercentComplete',
+	'peersConnected',
+	'peersGettingFromUs',
+	'peersSendingToUs',
 	'percentDone',
 	'rateDownload',
 	'rateUpload',
@@ -69,6 +71,7 @@ Torrent.Fields.Stats = [
 	'status',
 	'trackers',
 	'uploadRatio',
+	'webseedsSendingToUs'
 ];
 
 // fields used by the inspector which only need to be loaded once
