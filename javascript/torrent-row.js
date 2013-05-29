@@ -86,12 +86,12 @@ TorrentRendererHelper.renderProgressbar = function(controller, t, progressbar)
 
 TorrentRendererHelper.formatUL = function(t)
 {
-	return '↑ ' + Transmission.fmt.speedBps(t.getUploadSpeed());
+	return Transmission.fmt.speedBps(t.getUploadSpeed());
 };
 
 TorrentRendererHelper.formatDL = function(t)
 {
-	return '↓ ' + Transmission.fmt.speedBps(t.getDownloadSpeed());
+	return Transmission.fmt.speedBps(t.getDownloadSpeed());
 };
 
 /****
@@ -106,13 +106,16 @@ TorrentRendererFull.prototype =
 {
 	createRow: function()
 	{
-		var root, name, peers, progressbar, details, image, button;
+		var root, name, peers, eta, progressbar, details, image, button;
 
 		root = document.createElement('li');
 		root.className = 'torrent';
 
 		name = document.createElement('div');
 		name.className = 'torrent_name';
+
+		meta = document.createElement('div');
+		meta.className = 'torrent_meta';
 
 		peers = document.createElement('div');
 		peers.className = 'torrent_peer_details';
@@ -122,18 +125,24 @@ TorrentRendererFull.prototype =
 		details = document.createElement('div');
 		details.className = 'torrent_progress_details';
 
+		eta = document.createElement('div');
+		eta.className = 'torrent_progress_eta';
+
 		image = document.createElement('div');
 		button = document.createElement('a');
 		button.appendChild(image);
 
-		root.appendChild(name);
-		root.appendChild(peers);
-		root.appendChild(button);
-		root.appendChild(progressbar.element);
 		root.appendChild(details);
+		root.appendChild(progressbar.element);
+		root.appendChild(meta);
+		meta.appendChild(name);
+		meta.appendChild(eta);
+		//root.appendChild(peers);
+		root.appendChild(button);
 
 		root._name_container = name;
 		root._peer_details_container = peers;
+		root._progress_eta_container = eta;
 		root._progress_details_container = details;
 		root._progressbar = progressbar;
 		root._pause_resume_button_image = image;
@@ -153,24 +162,28 @@ TorrentRendererFull.prototype =
 			c = [ TorrentRendererHelper.formatDL(t) ];
 		}
 
-		// maybe append eta
-		if (!t.isStopped() && (!is_done || t.seedRatioLimit(controller)>0)) {
-			c.push(' - ');
-			var eta = t.getETA();
-			if (eta < 0 || eta >= (999*60*60) /* arbitrary */)
-				c.push('remaining time unknown');
-			else
-				c.push(Transmission.fmt.timeInterval(t.getETA()),
-				        ' remaining');
+		return c.join('');
+	},
+
+	getProgressEta: function(controller, t)
+	{
+		var c,
+		    is_done = t.isDone() || t.isSeeding();
+
+		if (!is_done) {
+			c = [ Transmission.fmt.timeInterval(t.getETA()) ];
 		}
 
-		return c.join('');
+		return c;
 	},
 
 	render: function(controller, t, root)
 	{
 		// name
 		setTextContent(root._name_container, t.getName());
+
+		var e = root;
+		$(e).css('background-image', 'url(' + t.getBackground() + ')');
 
 		//trackers
 		var trackers = t.getTrackers();
@@ -194,6 +207,10 @@ TorrentRendererFull.prototype =
 		// progress details
 		e = root._progress_details_container;
 		setTextContent(e, this.getProgressDetails(controller, t));
+
+		// progress eta
+		e = root._progress_eta_container;
+		setTextContent(e, this.getProgressEta(controller, t));		
 
 		// pause/resume button
 		var is_stopped = t.isStopped();

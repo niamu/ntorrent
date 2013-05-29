@@ -15,7 +15,6 @@ Trakt.prototype =
 	getTVLibrary: function()
 	{
 		var query = "http://api.trakt.tv/user/library/shows/all.json/" + this.apikey + "/" + this.user + "?callback=?";
-
 		this.rawLibrary = $.getJSON(query);
 	}
 };
