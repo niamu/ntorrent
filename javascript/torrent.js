@@ -100,6 +100,16 @@ Torrent.prototype =
 		this.fields = {};
 		this.fieldObservers = {};
 		this.refresh (data);
+
+		var trakt = new Trakt();
+
+		trakt.rawLibrary.done(function(data) {
+			library = [];
+			$.each(data, function(i, show) {
+				library.push(show.title);
+			});
+			this.tvLibrary = library;
+		});
 	},
 
 	notifyOnFieldChange: function(field, callback) {
@@ -118,6 +128,12 @@ Torrent.prototype =
 				observer.call(this, value, o[name], name);
 			}
 		}
+
+		if (name == "name"){
+			var torrent_name = value;
+			var clean_name = torrent_name.replace(/[\._]/g," ");
+		}
+
 		o[name] = value;
 		return true;
 	},
