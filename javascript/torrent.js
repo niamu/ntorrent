@@ -133,8 +133,8 @@ Torrent.prototype =
 		if (name == "shows"){
 			for (var i = 0; i < value.length; i++) {
 				var torrent_name = o["name"];
-				var clean_name = torrent_name.replace(/[\._\;]/g," ").replace(/[\:\(\)]/g,"");
-				var show = value[i].replace(/[\:\(\)]/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus");
+				var clean_name = torrent_name.replace(/[\._\;]/g," ").replace(/[\:\(\)]/g,"").toLowerCase();
+				var show = value[i].replace(/[\:\(\)]/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
 
 				var re = new RegExp(show);
 				if (clean_name.match(re)){
