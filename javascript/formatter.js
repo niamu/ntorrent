@@ -197,17 +197,17 @@ Transmission.fmt = (function()
 			if (days) {
 				if (days >= 4 || !hours)
 					return d;
-				return d + ', ' + h;
+				return d;
 			}
 			if (hours) {
 				if (hours >= 4 || !minutes)
 					return h;
-				return h + ', ' + m;
+				return h;
 			}
 			if (minutes) {
 				if (minutes >= 4 || !seconds)
 					return m;
-				return m + ', ' + s;
+				return m;
 			}
 			return s;
 		},

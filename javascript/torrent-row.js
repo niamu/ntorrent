@@ -53,7 +53,7 @@ TorrentRendererHelper.createProgressbar = function(classes)
 	incomplete.className = 'torrent_progress_bar incomplete';
 
 	progressbar = document.createElement('div');
-	progressbar.className = 'torrent_progress_bar_container ' + classes;
+	progressbar.className = 'torrent_progress_bar_container';
 	progressbar.appendChild(complete);
 	progressbar.appendChild(incomplete);
 
@@ -156,22 +156,30 @@ TorrentRendererFull.prototype =
 		var c,
 		    is_done = t.isDone() || t.isSeeding();
 
-		if (is_done) {
+		if (!t.isStopped() && is_done) {
 			c = [ TorrentRendererHelper.formatUL(t) ];
-		} else { // not done yet
+		}else if (!t.isStopped() && !is_done) { // not done yet
 			c = [ TorrentRendererHelper.formatDL(t) ];
+		}else{
+			c = [ "paused" ]; 
 		}
 
-		return c.join('');
+		return c;
 	},
 
 	getProgressEta: function(controller, t)
 	{
 		var c,
-		    is_done = t.isDone() || t.isSeeding();
+		is_done = t.isDone() || t.isSeeding();
 
-		if (!is_done) {
-			c = [ Transmission.fmt.timeInterval(t.getETA()) ];
+		if (!t.isStopped() && (!is_done || t.seedRatioLimit(controller)>0)) {
+			var eta = t.getETA();
+			if (eta < 0 || eta >= (999*60*60))
+				c = [ '' ];
+			else
+				c = [ Transmission.fmt.timeInterval(t.getETA()) ];
+		}else{
+			c = [ '' ];
 		}
 
 		return c;
@@ -206,7 +214,12 @@ TorrentRendererFull.prototype =
 
 		// progress details
 		e = root._progress_details_container;
-		setTextContent(e, this.getProgressDetails(controller, t));
+		var progress_percent = this.getProgressDetails(controller, t).toString();
+		if (progress_percent == "paused"){
+			setInnerHTML(e, "<span class=\"paused\">" + this.getProgressDetails(controller, t) + "</span>");
+		}else{
+			setInnerHTML(e, "<span>" + this.getProgressDetails(controller, t) + "</span>");
+		}
 
 		// progress eta
 		e = root._progress_eta_container;
