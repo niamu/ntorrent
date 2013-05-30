@@ -40,6 +40,9 @@ $(document).ready(function() {
 	// Initialise the dialog controller
 	dialog = new Dialog();
 
+	// Initialise the Trakt controller
+	trakt = new Trakt();
+
 	// Initialise the main Transmission controller
 	transmission = new Transmission();
 });

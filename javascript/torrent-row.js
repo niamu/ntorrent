@@ -156,14 +156,12 @@ TorrentRendererFull.prototype =
 		var c,
 		    is_done = t.isDone() || t.isSeeding();
 
-		c = [ "paused" ]; 
-
-		if (!t.isStopped() && is_done) {
-			if (TorrentRendererHelper.formatUL(t) != 0):
-				c = [ TorrentRendererHelper.formatUL(t) ];
-		}else if (!t.isStopped() && !is_done) { // not done yet
-			if (TorrentRendererHelper.formatDL(t) != 0):
-				c = [ TorrentRendererHelper.formatDL(t) ];
+		if (!t.isStopped() && is_done && TorrentRendererHelper.formatUL(t) != 0) {
+			c = [ TorrentRendererHelper.formatUL(t) ];
+		}else if (!t.isStopped() && !is_done && TorrentRendererHelper.formatDL(t) != 0) { // not done yet
+			c = [ TorrentRendererHelper.formatDL(t) ];
+		}else{
+			c = [ "paused" ]; 
 		}
 
 		return c;
@@ -190,7 +188,7 @@ TorrentRendererFull.prototype =
 	render: function(controller, t, root)
 	{
 		// name
-		setTextContent(root._name_container, t.getName());
+		setTextContent(root._name_container, t.getEpisodeName());
 
 		var e = root;
 		$(e).css('background-image', 'url(' + t.getBackground() + ')');

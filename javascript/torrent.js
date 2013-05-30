@@ -10,8 +10,6 @@ function Torrent(data)
 	this.initialize(data);
 }
 
-trakt = new Trakt();
-
 /***
 ****
 ****  Constants
@@ -104,12 +102,46 @@ Torrent.prototype =
 		this.refresh(data);
 
 		var library = [];
+		var torrent = this;
 		trakt.rawLibrary.done(function(result) {
 			$.each(result, function(i, show) {
 				library.push(show.title);
 			});
 			trakt.library = library;
-			transmission.refreshTorrents();
+
+			if (data["name"]){
+				for (var i = 0; i < trakt.library.length; i++) {
+					var torrent_name = data["name"];
+					var clean_name = torrent_name.replace(/[\._\;]/g," ").replace(/[\:\(\)]/g,"").toLowerCase();
+					var show = trakt.library[i].replace(/[\:\(\)]/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
+
+					var re = new RegExp(show);
+					if (clean_name.match(re)){
+						var title = show.toLowerCase().replace(/[ ]/g,"-");
+						var production_code = clean_name.match(/[0-9]{2}[eE|xX][0-9]{2}/)[0];
+						var season = parseInt(production_code.match(/[0-9]*/)[0], 10).toString();
+						var episode = parseInt(production_code.match(/[eE|xX][0-9]*/)[0].substring(1), 10).toString();
+
+						var query = "http://api.trakt.tv/show/episode/summary.json/" + trakt.apikey + "/" + title + "/" + season + "/" + episode + "?callback=?";
+						rawSummary = $.getJSON(query);
+						var summary = [];
+						var setField = torrent.setField;
+						rawSummary.done(function(result) {
+							if (episode < 10){
+								episode = "0" + episode;
+							}
+							setField(data,"episode_name",result.episode.title + " " + season + "x" + episode);
+							setField(data,"series_name",result.show.title);
+							if (isMobileDevice){
+								setField(data,"background",result.show.images.fanart.substring(0,result.show.images.fanart.length - 4) + "-218.jpg");
+							}else{
+								setField(data,"background",result.show.images.fanart.substring(0,result.show.images.fanart.length - 4) + "-940.jpg");
+							}
+							torrent.refresh(data);
+						});
+					}
+				}
+			}
 		});
 	},
 
@@ -127,40 +159,6 @@ Torrent.prototype =
 		if (o == this.fields && this.fieldObservers[name] && this.fieldObservers[name].length) {
 			for (i=0; observer=this.fieldObservers[name][i]; ++i) {
 				observer.call(this, value, o[name], name);
-			}
-		}
-
-		if (trakt.library){
-			for (var i = 0; i < trakt.library.length; i++) {
-				var torrent_name = o["name"];
-				var clean_name = torrent_name.replace(/[\._\;]/g," ").replace(/[\:\(\)]/g,"").toLowerCase();
-				var show = trakt.library[i].replace(/[\:\(\)]/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
-
-				var re = new RegExp(show);
-				if (clean_name.match(re)){
-					var title = show.toLowerCase().replace(/[ ]/g,"-");
-					var production_code = clean_name.match(/[0-9]{2}[eE|xX][0-9]{2}/)[0];
-					var season = parseInt(production_code.match(/[0-9]*/)[0], 10).toString();
-					var episode = parseInt(production_code.match(/[eE|xX][0-9]*/)[0].substring(1), 10).toString();
-
-					var query = "http://api.trakt.tv/show/episode/summary.json/" + trakt.apikey + "/" + title + "/" + season + "/" + episode + "?callback=?";
-					rawSummary = $.getJSON(query);
-					var summary = [];
-					var setField = this.setField;
-					rawSummary.done(function(result) {
-						if (episode < 10){
-							episode = "0" + episode;
-						}
-						setField(o,"name",result.episode.title + " " + season + "x" + episode);
-						setField(o,"series_name",result.show.title);
-						if (isMobileDevice){
-							setField(o,"background",result.show.images.fanart.substring(0,result.show.images.fanart.length - 4) + "-218.jpg");
-						}else{
-							setField(o,"background",result.show.images.fanart.substring(0,result.show.images.fanart.length - 4) + "-940.jpg");
-						}
-						transmission.refreshTorrents();
-					});
-				}
 			}
 		}
 
@@ -256,6 +254,7 @@ Torrent.prototype =
 	getLeftUntilDone: function() { return this.fields.leftUntilDone; },
 	getMetadataPercentComplete: function() { return this.fields.metadataPercentComplete; },
 	getName: function() { return this.fields.name || 'Unknown'; },
+	getEpisodeName: function() { return this.fields.episode_name || 'Unknown'; },
 	getBackground: function() { return this.fields.background || ''; },
 	getPeers: function() { return this.fields.peers; },
 	getPeersConnected: function() { return this.fields.peersConnected; },
