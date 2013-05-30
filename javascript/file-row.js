@@ -91,16 +91,20 @@ function FileRow(torrent, depth, name, indices, even)
 		root.appendChild(e);
 
 		e = document.createElement('div');
-		e.className = "inspector_torrent_file_list_entry_name";
-		setTextContent(e, name);
-		$(e).click(function(){ fireNameClicked(-1); });
-		root.appendChild(e);
-
-		e = document.createElement('div');
 		e.className = "inspector_torrent_file_list_entry_progress";
 		root.appendChild(e);
 		$(e).click(function(){ fireNameClicked(-1); });
 		elements.progress = e;
+
+		e = document.createElement('div');
+		e.className = "inspector_torrent_file_list_entry_name";
+		if (torrent.fields.name == name){
+			setTextContent(e, torrent.fields.series_name + " - " + torrent.fields.episode_name);
+		}else{
+			setTextContent(e, name);
+		}
+		$(e).click(function(){ fireNameClicked(-1); });
+		root.appendChild(e);
 
 		refreshImpl();
 		return root;

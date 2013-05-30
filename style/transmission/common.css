@@ -134,8 +134,9 @@ div#toolbar > *.disabled {
 #statusbar #filter input#torrent_search.blur {
   color: #999;
 }
-#statusbar #filter #filter-count {
-  margin-left: 8px;
+#filter-count {
+  color:#666;
+  font-size: 12px;
 }
 #statusbar #speed-info {
   float: right;
@@ -196,10 +197,12 @@ ul.torrent_list {
    */
  }
  ul.torrent_list li.torrent {
-  height:126px;
   margin-bottom: 5px;
   color: #FFF;
   box-shadow: 0 0 3px rgba(0,0,0,0.7);
+}
+ul.torrent_list li.torrent .wrapper {
+  height:126px;
   background-size:100%;
   background-repeat:no-repeat;
 }
@@ -359,17 +362,16 @@ ul.torrent_list div.torrent_progress_bar.incomplete.seeding {
 ****
 ***/
 div#torrent_inspector {
-  overflow: auto;
+  position: relative;
+  display:none;
+  overflow: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   -webkit-overflow-scrolling: touch;
   text-align: left;
-  padding: 15px;
-  top: 68px;
-  position: fixed;
-  width: 570px;
-  z-index: 5;
-  border-left: 1px solid #888;
-  bottom: 22px;
-  right: 0px;
+  padding: 5px;
+  background:#FFF;
   /* Files Inspector Tab */
 }
 div#torrent_inspector #inspector-close {
@@ -528,17 +530,23 @@ div#torrent_inspector li.inspector_torrent_file_list_entry.even {
   background-color: #F7F7F7;
 }
 div#torrent_inspector div.inspector_torrent_file_list_entry_name {
-  font-size: 1.2em;
-  color: black;
-  display: inline;
+  font-size: 12px;
+  color: #333;
+  display: inline-block;
   margin-left: 0px;
+  width: 240px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 div#torrent_inspector li.inspector_torrent_file_list_entry.skip > .inspector_torrent_file_list_entry_name {
-  color: #999;
+  color: #333;
 }
 div#torrent_inspector div.inspector_torrent_file_list_entry_progress {
-  color: #999;
-  margin-left: 20px;
+  color: #666;
+  margin: 0 5px;
+  font-size: 12px;
+  display: inline-block;
 }
 div#torrent_inspector ul.single_file li.inspector_torrent_file_list_entry > .file_wanted_control,
 div#torrent_inspector li.inspector_torrent_file_list_entry.complete > .file_wanted_control {

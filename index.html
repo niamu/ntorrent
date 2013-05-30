@@ -36,7 +36,6 @@
 		<div id="toolbar-separator"></div>
 		<div id="toolbar-start-all" title="Start All Torrents"></div>
 		<div id="toolbar-pause-all" title="Pause All Torrents"></div>
-		<div id="toolbar-inspector" title="Toggle Inspector"></div>
 	</div>
 
 	<div id="statusbar">
@@ -50,8 +49,6 @@
 				<option value="finished">Finished</option>
 			</select>
 			<select id="filter-tracker"></select>
-			<input type="search" id="torrent_search" placeholder="Filter" />
-			<span id="filter-count">&nbsp;</span>
 		</div>
 
 		<div id="turtle-button" title="Alternative Speed Limits">&nbsp;</div>
@@ -68,20 +65,11 @@
 		</div>
 	</div>
 
-	<div id="torrent_inspector" style="display:none;">
-
-		<div id="inspector_header">
-			<div id="torrent_inspector_name"></div>
-		</div>
-
-		<div class="inspector-page" id="inspector-page-files">
-			<ul id="inspector_file_list">
-			</ul>
-		</div>
-	</div>
+	<input type="search" id="torrent_search" placeholder="Filter" />
 
 	<div id="torrent_container">
 		<ul class="torrent_list" id="torrent_list"></ul>
+		<div id="filter-count">&nbsp;</div>
 	</div>
 
 	<div class="dialog_container" id="dialog_container" style="display:none;">

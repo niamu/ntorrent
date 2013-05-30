@@ -129,15 +129,21 @@ function Inspector(controller) {
         $(row).bind('nameClicked',onNameClicked);
     },
 
-    addSubtreeToView = function (tor, parent, sub, i) {
+    addSubtreeToView = function (tor, parent, sub, i, issub) {
         var key, div;
-        div = document.createElement('div');
+        if (issub){
+            div = parent;
+        }else{
+            div = document.createElement('div');
+        }
         if (sub.parent)
             addNodeToView (tor, div, sub, i++);
         if (sub.children)
             for (key in sub.children)
-                i = addSubtreeToView (tor, div, sub.children[key]);  
-        parent.appendChild(div);
+                i = addSubtreeToView (tor, div, sub.children[key],null,"yes");
+        if (!issub){
+            parent.appendChild(div);
+        }
         return i;
     },
                 
@@ -177,11 +183,7 @@ function Inspector(controller) {
 
         data.controller = controller;
 
-        data.elements.files_page     = $('#inspector-page-files')[0];
-
         data.elements.file_list      = $('#inspector_file_list')[0];
-        
-        data.elements.name_lb        = $('#torrent_inspector_name')[0];
 
         // force initial 'N/A' updates on all the pages
         updateInspector();

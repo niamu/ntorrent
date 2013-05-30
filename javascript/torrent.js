@@ -250,7 +250,7 @@ Torrent.prototype =
 	getLeftUntilDone: function() { return this.fields.leftUntilDone; },
 	getMetadataPercentComplete: function() { return this.fields.metadataPercentComplete; },
 	getName: function() { return this.fields.name || 'Unknown'; },
-	getEpisodeName: function() { return this.fields.episode_name || 'Unknown'; },
+	getEpisodeName: function() { return this.fields.episode_name || this.fields.name; },
 	getBackground: function() { return this.fields.background || ''; },
 	getPeers: function() { return this.fields.peers; },
 	getPeersConnected: function() { return this.fields.peersConnected; },
@@ -322,7 +322,7 @@ Torrent.prototype =
 	getCollatedName: function() {
 		var f = this.fields;
 		if (!f.collatedName && f.name)
-			f.collatedName = f.name.toLowerCase() + " " + f.series_name.toLowerCase();
+			f.collatedName = f.episode_name.toLowerCase() + " " + f.series_name.toLowerCase() + " " + f.name.toLowerCase();
 		return f.collatedName || '';
 	},
 	getCollatedTrackers: function() {

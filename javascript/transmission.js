@@ -24,7 +24,6 @@ Transmission.prototype =
 
 		// Initialize the helper classes
 		this.remote = new TransmissionRemote(this);
-		this.inspector = new Inspector(this, this.remote);
 
 		this.isMenuEnabled = !isMobileDevice;
 
@@ -191,6 +190,13 @@ Transmission.prototype =
 	},
 
 	getSelectedTorrents: function() {
+		if(this.getSelectedRows().length > 1){
+			if (document.getElementById("torrent_inspector")){
+				var inspector = document.getElementById("torrent_inspector");
+
+				inspector.parentNode.removeChild(inspector);
+			}
+		}
 		return $.map(this.getSelectedRows(),function(r) {
 			return r.getTorrent();
 		});
@@ -207,11 +213,40 @@ Transmission.prototype =
 
 	selectRow: function(row) {
 		$(row.getElement()).addClass('selected');
+
+		var inspector_files;
+
+		if (document.getElementById("torrent_inspector")){
+			var inspector = document.getElementById("torrent_inspector");
+
+			inspector.parentNode.removeChild(inspector);
+		}
+
+		inspector = document.createElement('div');
+		inspector.setAttribute('id', 'torrent_inspector');
+		inspector_files = document.createElement('ul');
+		inspector_files.setAttribute('id', 'inspector_file_list');
+		inspector.appendChild(inspector_files);
+
+		row_edit = row.getElement();
+		row_edit.appendChild(inspector);
+
+		transmission.inspector = new Inspector(transmission, transmission.remote);
+		transmission.toggleInspector();
+
 		this.callSelectionChangedSoon();
 	},
 
 	deselectRow: function(row) {
 		$(row.getElement()).removeClass('selected');
+
+		if (document.getElementById("torrent_inspector")){
+			var inspector = document.getElementById("torrent_inspector");
+
+			inspector.parentNode.removeChild(inspector);
+		}
+
+		transmission.toggleInspector();
 		this.callSelectionChangedSoon();
 	},
 
@@ -221,6 +256,13 @@ Transmission.prototype =
 	},
 	deselectAll: function() {
 		$(this.elements.torrent_list).children('.selected').removeClass('selected');
+
+		if (document.getElementById("torrent_inspector")){
+			var inspector = document.getElementById("torrent_inspector");
+
+			inspector.parentNode.removeChild(inspector);
+		}
+
 		this.callSelectionChangedSoon();
 		delete this._last_torrent_clicked;
 	},
