@@ -10,6 +10,8 @@ function Torrent(data)
 	this.initialize(data);
 }
 
+trakt = new Trakt();
+
 /***
 ****
 ****  Constants
@@ -99,17 +101,15 @@ Torrent.prototype =
 	{
 		this.fields = {};
 		this.fieldObservers = {};
-
-		trakt = new Trakt();
-		torrent = this;
+		this.refresh(data);
 
 		var library = [];
 		trakt.rawLibrary.done(function(result) {
 			$.each(result, function(i, show) {
 				library.push(show.title);
 			});
-			data["shows"] = library;
-			torrent.refresh(data);
+			trakt.library = library;
+			transmission.refreshTorrents();
 		});
 	},
 
@@ -130,11 +130,11 @@ Torrent.prototype =
 			}
 		}
 
-		if (name == "shows"){
-			for (var i = 0; i < value.length; i++) {
+		if (trakt.library){
+			for (var i = 0; i < trakt.library.length; i++) {
 				var torrent_name = o["name"];
 				var clean_name = torrent_name.replace(/[\._\;]/g," ").replace(/[\:\(\)]/g,"").toLowerCase();
-				var show = value[i].replace(/[\:\(\)]/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
+				var show = trakt.library[i].replace(/[\:\(\)]/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
 
 				var re = new RegExp(show);
 				if (clean_name.match(re)){
@@ -147,12 +147,12 @@ Torrent.prototype =
 					rawSummary = $.getJSON(query);
 					var summary = [];
 					var setField = this.setField;
-					var refresh = this.refresh;
 					rawSummary.done(function(result) {
 						if (episode < 10){
 							episode = "0" + episode;
 						}
 						setField(o,"name",result.episode.title + " " + season + "x" + episode);
+						setField(o,"series_name",result.show.title);
 						if (isMobileDevice){
 							setField(o,"background",result.show.images.fanart.substring(0,result.show.images.fanart.length - 4) + "-218.jpg");
 						}else{
@@ -327,7 +327,7 @@ Torrent.prototype =
 	getCollatedName: function() {
 		var f = this.fields;
 		if (!f.collatedName && f.name)
-			f.collatedName = f.name.toLowerCase();
+			f.collatedName = f.name.toLowerCase() + " " + f.series_name.toLowerCase();
 		return f.collatedName || '';
 	},
 	getCollatedTrackers: function() {

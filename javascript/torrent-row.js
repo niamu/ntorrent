@@ -156,12 +156,14 @@ TorrentRendererFull.prototype =
 		var c,
 		    is_done = t.isDone() || t.isSeeding();
 
+		c = [ "paused" ]; 
+
 		if (!t.isStopped() && is_done) {
-			c = [ TorrentRendererHelper.formatUL(t) ];
+			if (TorrentRendererHelper.formatUL(t) != 0):
+				c = [ TorrentRendererHelper.formatUL(t) ];
 		}else if (!t.isStopped() && !is_done) { // not done yet
-			c = [ TorrentRendererHelper.formatDL(t) ];
-		}else{
-			c = [ "paused" ]; 
+			if (TorrentRendererHelper.formatDL(t) != 0):
+				c = [ TorrentRendererHelper.formatDL(t) ];
 		}
 
 		return c;
