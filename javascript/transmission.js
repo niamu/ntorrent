@@ -599,8 +599,6 @@ Transmission.prototype =
 		ev.stopPropagation();
 
 		if (isMobileDevice) {
-			if (row.isSelected())
-				this.setInspectorVisible(true);
 			this.setSelectedRow(row);
 
 		} else if (ev.shiftKey) {
@@ -622,7 +620,7 @@ Transmission.prototype =
 
 		// Regular Click, selected
 		} else if (row.isSelected()) {
-			this.setSelectedRow(row);
+			this.deselectRow(row);
 		}
 
 		this._last_torrent_clicked = row.getTorrentId();
@@ -1074,7 +1072,6 @@ Transmission.prototype =
 				e.row = row;
 				dirty_rows.push(row);
 				$(e).click($.proxy(this.onRowClicked,this));
-				$(e).dblclick($.proxy(this.toggleInspector,this));
 			}
 		}
 
