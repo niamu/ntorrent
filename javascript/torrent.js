@@ -132,11 +132,7 @@ Torrent.prototype =
 							}
 							setField(data,"episode_name",result.episode.title + " " + season + "x" + episode);
 							setField(data,"series_name",result.show.title);
-							if (isMobileDevice){
-								setField(data,"background",result.show.images.fanart.substring(0,result.show.images.fanart.length - 4) + "-218.jpg");
-							}else{
-								setField(data,"background",result.show.images.fanart.substring(0,result.show.images.fanart.length - 4) + "-940.jpg");
-							}
+							setField(data,"background",result.show.images.fanart.substring(0,result.show.images.fanart.length - 4) + "-940.jpg");
 							torrent.refresh(data);
 						});
 					}
