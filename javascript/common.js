@@ -20,22 +20,26 @@ if (!Array.indexOf){
 	}
 }
 
-// http://forum.jquery.com/topic/combining-ui-dialog-and-tabs
-$.fn.tabbedDialog = function (dialog_opts) {
-	this.tabs({selected: 0});
-	this.dialog(dialog_opts);
-	this.find('.ui-tab-dialog-close').append(this.parent().find('.ui-dialog-titlebar-close'));
-	var tabul = this.find('ul:first');
-	this.parent().addClass('ui-tabs').prepend(tabul).draggable('option','handle',tabul); 
-	this.siblings('.ui-dialog-titlebar').remove();
-	tabul.addClass('ui-dialog-titlebar');
-}
-
 $(document).ready(function() {
 	if (isMobileDevice){
 		window.onload = function(){ setTimeout(function() { window.scrollTo(0,1); },500); };
 		window.onorientationchange = function(){ setTimeout(function() { window.scrollTo(0,1); },100); };
 	}
+
+	$("#toggle_toolbar").click(function() {
+		$("#toolbar").css("left","0px");
+		$("#overlay").css("opacity","1");
+		$("#overlay").css("width","100%");
+	});
+
+	$("#overlay").click(function() {
+		$("#toolbar").css("left","-280px");
+		$("#overlay").css("opacity","0");
+		var resetwidth=setTimeout(function(){
+			$("#overlay").css("width","0%");
+			clearTimeout(resetwidth);
+		},500);
+	});
 
 	// Initialise the dialog controller
 	dialog = new Dialog();
