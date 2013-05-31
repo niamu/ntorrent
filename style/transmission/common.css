@@ -356,7 +356,7 @@ ul.torrent_list li.torrent div.torrent_progress_details {
 }
 ul.torrent_list li.torrent div.torrent_progress_details span {
   background:url("images/torrent-down.png") left center no-repeat;
-  padding-left:20px;
+  padding-left:16px;
 }
 ul.torrent_list li.torrent div.torrent_progress_details span.paused {
   display:none;
