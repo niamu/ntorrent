@@ -26,21 +26,6 @@ $(document).ready(function() {
 		window.onorientationchange = function(){ setTimeout(function() { window.scrollTo(0,1); },100); };
 	}
 
-	$("#toggle_toolbar").click(function() {
-		$("#toolbar").css("left","0px");
-		$("#overlay").css("opacity","1");
-		$("#overlay").css("width","100%");
-	});
-
-	$("#overlay").click(function() {
-		$("#toolbar").css("left","-280px");
-		$("#overlay").css("opacity","0");
-		var resetwidth=setTimeout(function(){
-			$("#overlay").css("width","0%");
-			clearTimeout(resetwidth);
-		},500);
-	});
-
 	// Initialise the dialog controller
 	dialog = new Dialog();
 
@@ -154,7 +139,7 @@ Prefs._CompactDisplayState= 'compact_display_state';
 Prefs._Defaults =
 {
 	'filter': 'active',
-	'refresh_rate' : 5,
+	'refresh_rate' : 3,
 	'sort_direction': 'descending',
 	'sort_method': 'percent_completed',
 	'turtle-state' : false,

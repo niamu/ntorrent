@@ -99,29 +99,55 @@ Torrent.prototype =
 	{
 		this.fields = {};
 		this.fieldObservers = {};
+
+		//Check tracker and match it to proper injection function
+		if (trakt.library){
+			//trakt.populateTVTorrents();
+			//trakt.populateMovieTorrents();
+			//this.injectTraktData(data);
+		}
+	},
+
+	injectTraktTVData: function(data) {
+		seriesData = trakt.getSeries(data);
+
+		this.setField(data,"series_name",seriesData.title);
+		this.setField(data,"background",seriesData.poster.substring(0,seriesData.poster.length - 4) + "-300.jpg");
 		this.refresh(data);
 
 		var torrent = this;
 
-		trakt.rawLibrary.done(function(result) {
-			var library = [];
-			$.each(result, function(i, show) {
-				library.push(show.title);
-			});
-			trakt.libraryTitles = library;
-			trakt.library = result;
+		if (trakt.library){
+			seriesData = trakt.getSeries(data);
 
-			episodeData = trakt.getEpisode(data);
+			torrent.setField(data,"series_name",seriesData.title);
+			torrent.setField(data,"background",seriesData.poster.substring(0,seriesData.poster.length - 4) + "-300.jpg");
+			torrent.refresh(data);
+		}else{
+			trakt.rawLibrary.done(function(result) {
+				trakt.library = result;
+				sessionStorage.setItem('library', JSON.stringify(trakt.library));
 
-			trakt.rawEpisode.done(function(result) {
-				if (episodeData.episode < 10){
-					episodeData.episode = "0" + episodeData.episode;
-				}
-				torrent.setField(data,"episode_name",result.episode.title + " " + episodeData.season + "x" + episodeData.episode);
-				torrent.setField(data,"series_name",result.show.title);
-				torrent.setField(data,"background",result.show.images.poster.substring(0,result.show.images.poster.length - 4) + "-300.jpg");
+				seriesData = trakt.getSeries(data);
+
+				torrent.setField(data,"series_name",seriesData.title);
+				torrent.setField(data,"background",seriesData.poster.substring(0,seriesData.poster.length - 4) + "-300.jpg");
 				torrent.refresh(data);
 			});
+		}
+	},
+
+	injectTraktEpisodeData: function(data) {
+		episodeData = trakt.getEpisode(data);
+
+		trakt.rawEpisode.done(function(result) {
+			if (episodeData.episode < 10){
+				episodeData.episode = "0" + episodeData.episode;
+			}
+			torrent.setField(data,"episode_name",result.episode.title + " " + episodeData.season + "x" + episodeData.episode);
+			torrent.setField(data,"series_name",result.show.title);
+			torrent.setField(data,"background",result.show.images.poster.substring(0,result.show.images.poster.length - 4) + "-300.jpg");
+			torrent.refresh(data);
 		});
 	},
 
@@ -234,6 +260,7 @@ Torrent.prototype =
 	getLeftUntilDone: function() { return this.fields.leftUntilDone; },
 	getMetadataPercentComplete: function() { return this.fields.metadataPercentComplete; },
 	getName: function() { return this.fields.name || 'Unknown'; },
+	getSeriesName: function() { return this.fields.series_name || this.fields.name; },
 	getEpisodeName: function() { return this.fields.episode_name || this.fields.name; },
 	getBackground: function() { return this.fields.background || ''; },
 	getPeers: function() { return this.fields.peers; },

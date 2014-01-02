@@ -1160,13 +1160,6 @@ Transmission.prototype =
 		this._rows = rows;
 		this.dirtyTorrents = {};
 
-		// jquery's even/odd starts with 1 not 0, so invert its logic
-		e = []
-		for (i=0; row=rows[i]; ++i)
-			e.push(row.getElement());
-		$(e).filter(":odd").addClass('even'); 
-		$(e).filter(":even").removeClass('even'); 
-
 		// sync gui
 		this.updateStatusbar();
 		if (old_sel_count !== $(list).children('.selected').length)

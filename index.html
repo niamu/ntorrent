@@ -2,13 +2,11 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+	<meta name="viewport" content="width=device-width, user-scalable=no"/>
 	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<link href="./images/favicon.ico" rel="icon" />
 	<link href="./images/favicon.png" rel="shortcut icon" />
 	<link rel="apple-touch-icon" href="./images/webclip-icon.png"/>
 	<script type="text/javascript" src="./javascript/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="./javascript/jquery/jqueryui-1.8.16.min.js"></script>
 
 	<link media="only screen and (max-device-width: 480px)" href="./style/transmission/mobile.css" type= "text/css" rel="stylesheet" />
 	<link media="screen and (min-device-width: 481px)" href="./style/transmission/common.css" type="text/css" rel="stylesheet" />
@@ -46,26 +44,27 @@
 		<select id="filter-tracker"></select>
 	</div>
 
-	<div id="top">
-		<div id="toggle_toolbar"></div>
-		<input type="search" id="torrent_search" placeholder="search" />
-	</div>
+	<div id="right">
+		<div id="top">
+			<input type="search" id="torrent_search" placeholder="search" />
 
-	<div id="statusbar">
-		<div id="speed-info">
-			<div id="speed-dn-container">
-				<div id="speed-dn-label"></div>
-			</div>
-			<div id="turtle-button" title="Alternative Speed Limits">&nbsp;</div>
-			<div id="speed-up-container">
-				<div id="speed-up-label"></div>
+			<div id="statusbar">
+				<div id="speed-info">
+					<div id="speed-dn-container">
+						<div id="speed-dn-label"></div>
+					</div>
+					<div id="turtle-button" title="Alternative Speed Limits">&nbsp;</div>
+					<div id="speed-up-container">
+						<div id="speed-up-label"></div>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<div id="torrent_container">
-		<ul class="torrent_list" id="torrent_list"></ul>
-		<div id="filter-count">&nbsp;</div>
+		<div id="torrent_container">
+			<ul class="torrent_list" id="torrent_list"></ul>
+			<div id="filter-count">&nbsp;</div>
+		</div>
 	</div>
 
 	<div class="dialog_container" id="dialog_container" style="display:none;">
@@ -84,7 +83,7 @@
 		<div class="dialog_window">
 			<div class="dialog_logo" id="upload_dialog_logo"></div>
 			<h2 class="dialog_heading">Upload Torrent Files</h2>
-			<form action="#" method="post" id="torrent_upload_form" enctype="multipart/form-data" target="torrent_upload_frame">
+			<form action="#" method="post" id="torrent_upload_form" enctype="multipart/form-data">
 				<div class="dialog_message">
 					<label for="torrent_upload_file">Please select a torrent file to upload:</label>
 					<input type="file" name="torrent_files[]" id="torrent_upload_file" multiple="multiple" />
@@ -96,7 +95,5 @@
 			</form>
 		</div>
 	</div>
-
-	<iframe name="torrent_upload_frame" id="torrent_upload_frame" src="about:blank" ></iframe>
 </body>
 </html>

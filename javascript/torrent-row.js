@@ -114,11 +114,14 @@ TorrentRendererFull.prototype =
 		poster = document.createElement('div');
 		poster.className = 'poster';
 
-		name = document.createElement('div');
+		name = document.createElement('span');
 		name.className = 'torrent_name';
 
-		meta = document.createElement('div');
+		meta = document.createElement('span');
 		meta.className = 'torrent_meta';
+
+		description = document.createElement('div');
+		description.className = 'torrent_description';
 
 		peers = document.createElement('div');
 		peers.className = 'torrent_peer_details';
@@ -137,15 +140,17 @@ TorrentRendererFull.prototype =
 		button.appendChild(image);
 
 		root.appendChild(poster);
-		root.appendChild(details);
+		//root.appendChild(details);
 		root.appendChild(progressbar.element);
-		root.appendChild(meta);
-		meta.appendChild(name);
-		meta.appendChild(eta);
+		root.appendChild(description);
+		description.appendChild(name);
+		description.appendChild(meta);
+		description.appendChild(eta);
 		//root.appendChild(peers);
 		root.appendChild(button);
 
 		root._name_container = name;
+		root._meta_container = meta;
 		root._peer_details_container = peers;
 		root._progress_eta_container = eta;
 		root._progress_details_container = details;
@@ -193,7 +198,8 @@ TorrentRendererFull.prototype =
 	render: function(controller, t, root)
 	{
 		// name
-		setTextContent(root._name_container, t.getEpisodeName());
+		setTextContent(root._meta_container, t.getEpisodeName());
+		setTextContent(root._name_container, t.getSeriesName());
 
 		var e = root.getElementsByClassName("poster")[0];
 		$(e).css('background-image', 'url(' + t.getBackground() + ')');

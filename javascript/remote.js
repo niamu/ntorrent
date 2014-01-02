@@ -31,7 +31,7 @@ TransmissionRemote.prototype =
 	initialize: function(controller) {
 		this._controller = controller;
 		this._error = '';
-		this._token = '';
+		this._token = localStorage.token || '';
 	},
 
 	/*
@@ -45,6 +45,7 @@ TransmissionRemote.prototype =
 		// set the Transmission-Session-Id on a 409
 		if (request.status === 409 && (token = request.getResponseHeader('X-Transmission-Session-Id'))){
 			remote._token = token;
+			localStorage.token = token;
 			$.ajax(ajaxObject);
 			return;
 		}
