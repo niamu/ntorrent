@@ -106,13 +106,13 @@ TorrentRendererFull.prototype =
 {
 	createRow: function()
 	{
-		var root, wrapper, name, peers, eta, progressbar, details, image, button;
+		var root, poster, name, peers, eta, progressbar, details, image, button;
 
 		root = document.createElement('li');
 		root.className = 'torrent';
 
-		wrapper = document.createElement('div');
-		wrapper.className = 'wrapper';
+		poster = document.createElement('div');
+		poster.className = 'poster';
 
 		name = document.createElement('div');
 		name.className = 'torrent_name';
@@ -136,14 +136,14 @@ TorrentRendererFull.prototype =
 
 		button.appendChild(image);
 
-		root.appendChild(wrapper);
-		wrapper.appendChild(details);
-		wrapper.appendChild(progressbar.element);
-		wrapper.appendChild(meta);
+		root.appendChild(poster);
+		root.appendChild(details);
+		root.appendChild(progressbar.element);
+		root.appendChild(meta);
 		meta.appendChild(name);
 		meta.appendChild(eta);
 		//root.appendChild(peers);
-		wrapper.appendChild(button);
+		root.appendChild(button);
 
 		root._name_container = name;
 		root._peer_details_container = peers;
@@ -195,7 +195,8 @@ TorrentRendererFull.prototype =
 		// name
 		setTextContent(root._name_container, t.getEpisodeName());
 
-		$(root).css('background-image', 'url(' + t.getBackground() + ')');
+		var e = root.getElementsByClassName("poster")[0];
+		$(e).css('background-image', 'url(' + t.getBackground() + ')');
 
 		//trackers
 		var trackers = t.getTrackers();
