@@ -101,43 +101,27 @@ Torrent.prototype =
 		this.fieldObservers = {};
 		this.refresh(data);
 
-		var library = [];
 		var torrent = this;
+
 		trakt.rawLibrary.done(function(result) {
+			var library = [];
 			$.each(result, function(i, show) {
 				library.push(show.title);
 			});
-			trakt.library = library;
+			trakt.libraryTitles = library;
+			trakt.library = result;
 
-			if (data["name"]){
-				for (var i = 0; i < trakt.library.length; i++) {
-					var torrent_name = data["name"];
-					var clean_name = torrent_name.replace(/[\._\;]/g," ").replace(/[\:\(\)]/g,"").toLowerCase();
-					var show = trakt.library[i].replace(/[\:\(\)]/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
+			episodeData = trakt.getEpisode(data);
 
-					var re = new RegExp(show);
-					if (clean_name.match(re)){
-						var title = show.toLowerCase().replace(/[ ]/g,"-");
-						var production_code = clean_name.match(/[0-9]{2}[eE|xX][0-9]{2}/)[0];
-						var season = parseInt(production_code.match(/[0-9]*/)[0], 10).toString();
-						var episode = parseInt(production_code.match(/[eE|xX][0-9]*/)[0].substring(1), 10).toString();
-
-						var query = "http://api.trakt.tv/show/episode/summary.json/" + trakt.apikey + "/" + title + "/" + season + "/" + episode + "?callback=?";
-						rawSummary = $.getJSON(query);
-						var summary = [];
-						var setField = torrent.setField;
-						rawSummary.done(function(result) {
-							if (episode < 10){
-								episode = "0" + episode;
-							}
-							setField(data,"episode_name",result.episode.title + " " + season + "x" + episode);
-							setField(data,"series_name",result.show.title);
-							setField(data,"background",result.show.images.fanart.substring(0,result.show.images.fanart.length - 4) + "-940.jpg");
-							torrent.refresh(data);
-						});
-					}
+			trakt.rawEpisode.done(function(result) {
+				if (episodeData.episode < 10){
+					episodeData.episode = "0" + episodeData.episode;
 				}
-			}
+				torrent.setField(data,"episode_name",result.episode.title + " " + episodeData.season + "x" + episodeData.episode);
+				torrent.setField(data,"series_name",result.show.title);
+				torrent.setField(data,"background",result.show.images.poster.substring(0,result.show.images.poster.length - 4) + "-300.jpg");
+				torrent.refresh(data);
+			});
 		});
 	},
 

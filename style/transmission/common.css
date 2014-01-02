@@ -9,13 +9,13 @@
 }
 
 body {
+  position:relative;
   font-family: Helvetica, Arial, sans-serif;
   /* Resets 1em to 10px */
   color: #444;
   /* !important; */
   background: #E5E5E5;
   margin: 0;
-
 }
 body img {
   border: none;
@@ -62,27 +62,15 @@ div#top {
 ****
 ***/
 div#toolbar {
-  position:fixed;
-  top:0;
-  left:-280px;
+  position:relative;
   height:100%;
-  width:275px;
+  min-height:100%;
+  display: inline-block;
+  width:200px;
   margin: 0px;
   padding: 2px;
-  background-color: #FFF;
-  box-shadow:0 0 5px rgba(0,0,0,0.7);
-  z-index: 5;
+  background-color: #10171C;
   -webkit-transition: left 0.25s ease-in-out;
-}
-div#overlay {
-  opacity:0;
-  position:absolute;
-  top:0px;
-  left:0px;
-  width:0%;
-  height:100%;
-  background:rgba(0,0,0,0.3);
-  -webkit-transition: opacity 0.25s linear;
 }
 div#toolbar > * {
   position: relative;
@@ -237,7 +225,6 @@ div#torrent_container {
 }
 
 ul.torrent_list {
-  width: 310px;
   margin: 5px;
   padding: 0;
   text-align: left;
@@ -257,14 +244,13 @@ ul.torrent_list {
    */
  }
  ul.torrent_list li.torrent {
-  margin-bottom: 5px;
+  display: inline-block;
+  width: 180px;
+  height: 265px;
+  margin: 0 5px 5px 0;
   color: #FFF;
   box-shadow: 0 0 2px rgba(0,0,0,0.7);
-}
-ul.torrent_list li.torrent .wrapper {
-  height:126px;
-  background-size:100%;
-  background-repeat:no-repeat;
+  background:50% 50% / cover no-repeat;
 }
 ul.torrent_list li.torrent.even {
   background-color: #F7F7F7;

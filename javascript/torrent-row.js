@@ -195,8 +195,7 @@ TorrentRendererFull.prototype =
 		// name
 		setTextContent(root._name_container, t.getEpisodeName());
 
-		var e = root.getElementsByClassName("wrapper")[0];
-		$(e).css('background-image', 'url(' + t.getBackground() + ')');
+		$(root).css('background-image', 'url(' + t.getBackground() + ')');
 
 		//trackers
 		var trackers = t.getTrackers();
