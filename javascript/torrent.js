@@ -116,25 +116,6 @@ Torrent.prototype =
 		this.refresh(data);
 
 		var torrent = this;
-
-		if (trakt.library){
-			seriesData = trakt.getSeries(data);
-
-			torrent.setField(data,"series_name",seriesData.title);
-			torrent.setField(data,"background",seriesData.poster.substring(0,seriesData.poster.length - 4) + "-300.jpg");
-			torrent.refresh(data);
-		}else{
-			trakt.rawLibrary.done(function(result) {
-				trakt.library = result;
-				sessionStorage.setItem('library', JSON.stringify(trakt.library));
-
-				seriesData = trakt.getSeries(data);
-
-				torrent.setField(data,"series_name",seriesData.title);
-				torrent.setField(data,"background",seriesData.poster.substring(0,seriesData.poster.length - 4) + "-300.jpg");
-				torrent.refresh(data);
-			});
-		}
 	},
 
 	injectTraktEpisodeData: function(data) {
