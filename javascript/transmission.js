@@ -66,7 +66,7 @@ Transmission.prototype =
 		if (!isMobileDevice) {
 			$(document).bind('keydown', $.proxy(this.keyDown,this) );
 			$(document).bind('keyup', $.proxy(this.keyUp, this) );
-			$('#torrent_container').click( $.proxy(this.deselectAll,this) );
+			$('#transmission_body').click( $.proxy(this.deselectAll,this) );
 			$('#torrent_container').bind('dragover', $.proxy(this.dragenter,this));
 			$('#torrent_container').bind('dragenter', $.proxy(this.dragenter,this));
 			$('#torrent_container').bind('drop', $.proxy(this.drop,this));
