@@ -5,7 +5,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-function FileRow(torrent, depth, name, indices, even)
+function FileRow(torrent, depth, name, indices)
 {
 	var fields = {
 		have: 0,
@@ -21,10 +21,10 @@ function FileRow(torrent, depth, name, indices, even)
 		root: null
 	},
 
-	initialize = function(torrent, depth, name, indices, even) {
+	initialize = function(torrent, depth, name, indices) {
 		fields.torrent = torrent;
 		fields.indices = indices;
-		createRow(torrent, depth, name, even);
+		createRow(torrent, depth, name);
 	},
 
 	refreshWantedHTML = function()
@@ -75,11 +75,11 @@ function FileRow(torrent, depth, name, indices, even)
 		return (fields.torrent.getFileCount()>1) && !isDone();
 	},
 
-	createRow = function(torrent, depth, name, even) {
+	createRow = function(torrent, depth, name) {
 		var e, root, box;
 
 		root = document.createElement('li');
-		root.className = 'inspector_torrent_file_list_entry' + (even?'even':'odd');
+		root.className = 'inspector_torrent_file_list_entry';
 		elements.root = root;
 
 		e = document.createElement('input');
@@ -98,7 +98,7 @@ function FileRow(torrent, depth, name, indices, even)
 
 		e = document.createElement('div');
 		e.className = "inspector_torrent_file_list_entry_name";
-		if (torrent.fields.name == name){
+		if (torrent.fields.series_name){
 			setTextContent(e, torrent.fields.series_name + " - " + torrent.fields.episode_name);
 		}else{
 			setTextContent(e, name);
@@ -128,5 +128,5 @@ function FileRow(torrent, depth, name, indices, even)
 		refreshImpl();
 	};
 
-	initialize(torrent, depth, name, indices, even);
+	initialize(torrent, depth, name, indices);
 };

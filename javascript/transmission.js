@@ -24,6 +24,7 @@ Transmission.prototype =
 
 		// Initialize the helper classes
 		this.remote = new TransmissionRemote(this);
+		this.inspector = new Inspector(this, this.remote);
 
 		this.isMenuEnabled = !isMobileDevice;
 
@@ -56,8 +57,6 @@ Transmission.prototype =
 
 		$('#torrent_upload_form').submit(function() { $('#upload_confirm_button').click(); return false; });
 
-		$('#toolbar-inspector').click($.proxy(this.toggleInspector,this));
-
 		e = $('#filter-mode');
 		e.val(this[Prefs._FilterMode]);
 		e.change($.proxy(this.onFilterModeClicked,this));
@@ -66,11 +65,10 @@ Transmission.prototype =
 		if (!isMobileDevice) {
 			$(document).bind('keydown', $.proxy(this.keyDown,this) );
 			$(document).bind('keyup', $.proxy(this.keyUp, this) );
-			$('#transmission_body').click( $.proxy(this.deselectAll,this) );
+			$('#torrent_container').click( $.proxy(this.deselectAll,this) );
 			$('#torrent_container').bind('dragover', $.proxy(this.dragenter,this));
 			$('#torrent_container').bind('dragenter', $.proxy(this.dragenter,this));
 			$('#torrent_container').bind('drop', $.proxy(this.drop,this));
-			$('#inspector_link').click( $.proxy(this.toggleInspector,this) );
 
 			this.setupSearchBox();
 		}
@@ -213,40 +211,13 @@ Transmission.prototype =
 
 	selectRow: function(row) {
 		$(row.getElement()).addClass('selected');
-
-		var inspector_files;
-
-		if (document.getElementById("torrent_inspector")){
-			var inspector = document.getElementById("torrent_inspector");
-
-			inspector.parentNode.removeChild(inspector);
-		}
-
-		inspector = document.createElement('div');
-		inspector.setAttribute('id', 'torrent_inspector');
-		inspector_files = document.createElement('ul');
-		inspector_files.setAttribute('id', 'inspector_file_list');
-		inspector.appendChild(inspector_files);
-
-		row_edit = row.getElement();
-		row_edit.appendChild(inspector);
-
-		transmission.inspector = new Inspector(transmission, transmission.remote);
-		transmission.toggleInspector();
-
+		transmission.toggleInspector(true);
 		this.callSelectionChangedSoon();
 	},
 
 	deselectRow: function(row) {
 		$(row.getElement()).removeClass('selected');
-
-		if (document.getElementById("torrent_inspector")){
-			var inspector = document.getElementById("torrent_inspector");
-
-			inspector.parentNode.removeChild(inspector);
-		}
-
-		transmission.toggleInspector();
+		transmission.toggleInspector(false);
 		this.callSelectionChangedSoon();
 	},
 
@@ -256,14 +227,8 @@ Transmission.prototype =
 	},
 	deselectAll: function() {
 		$(this.elements.torrent_list).children('.selected').removeClass('selected');
-
-		if (document.getElementById("torrent_inspector")){
-			var inspector = document.getElementById("torrent_inspector");
-
-			inspector.parentNode.removeChild(inspector);
-		}
-
 		this.callSelectionChangedSoon();
+		transmission.toggleInspector(false);
 		delete this._last_torrent_clicked;
 	},
 
@@ -996,9 +961,9 @@ Transmission.prototype =
 	{
 		return $('#torrent_inspector').is(':visible');
 	},
-	toggleInspector: function()
+	toggleInspector: function(visible)
 	{
-		this.setInspectorVisible(!this.inspectorIsVisible());
+		this.setInspectorVisible(visible);
 	},
 	setInspectorVisible: function(visible)
 	{
@@ -1007,7 +972,6 @@ Transmission.prototype =
 
 		// update the ui widgetry
 		$('#torrent_inspector').toggle(visible);
-		$('#toolbar-inspector').toggleClass('selected',visible);
 		this.hideMobileAddressbar();
 		if (isMobileDevice) {
 			$('body').toggleClass('inspector_showing',visible);

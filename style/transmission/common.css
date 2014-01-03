@@ -113,7 +113,7 @@ input[type="text"],input[type="password"] {
   margin: 0px;
   padding: 2px;
   box-sizing: border-box;
-  background-color: #10171C;
+  background-color: #2A2C3C;
   -webkit-transition: left 0.25s ease-in-out;
 }
 #toolbar > * {
@@ -435,7 +435,8 @@ ul.torrent_list .torrent_progress_bar.incomplete.seeding {
   text-align: left;
   padding: 5px;
   background:#FFF;
-  /* Files Inspector Tab */
+  width:100%;
+  box-sizing: border-box;
 }
 #torrent_inspector #inspector-close {
   display: none;
@@ -582,9 +583,13 @@ ul.torrent_list .torrent_progress_bar.incomplete.seeding {
   list-style-image: none;
   clear: both;
 }
+#torrent_inspector li.inspector_torrent_file_list_entry:first-child {
+  margin:0;
+}
 #torrent_inspector li.inspector_torrent_file_list_entry {
   padding: 3px 0 3px 2px;
   display: block;
+  margin-left:16px;
 }
 #torrent_inspector li.inspector_torrent_file_list_entry.skip {
   color: #666;
