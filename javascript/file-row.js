@@ -82,29 +82,40 @@ function FileRow(torrent, depth, name, indices)
 		root.className = 'inspector_torrent_file_list_entry';
 		elements.root = root;
 
+		var label = document.createElement('label');
+		root.appendChild(label);
+
 		e = document.createElement('input');
 		e.type = 'checkbox';
 		e.className = "file_wanted_control";
 		e.title = 'Download file';
 		$(e).change(function(ev){ fireWantedChanged( $(ev.currentTarget).prop('checked')); });
 		root.checkbox = e;
-		root.appendChild(e);
+		label.appendChild(e);
 
 		e = document.createElement('div');
 		e.className = "inspector_torrent_file_list_entry_progress";
-		root.appendChild(e);
+		label.appendChild(e);
 		$(e).click(function(){ fireNameClicked(-1); });
 		elements.progress = e;
 
 		e = document.createElement('div');
 		e.className = "inspector_torrent_file_list_entry_name";
-		if (torrent.fields.series_name){
-			setTextContent(e, torrent.fields.series_name + " - " + torrent.fields.episode_name);
+		if (!depth){
+			setTextContent(e, torrent.getName());
 		}else{
 			setTextContent(e, name);
 		}
 		$(e).click(function(){ fireNameClicked(-1); });
-		root.appendChild(e);
+		label.appendChild(e);
+
+		e = document.createElement('span');
+		e.className = "inspector_torrent_file_list_entry_meta";
+		if (!depth){
+			setTextContent(e, torrent.getMeta());
+		}
+		$(e).click(function(){ fireNameClicked(-1); });
+		label.appendChild(e);
 
 		refreshImpl();
 		return root;

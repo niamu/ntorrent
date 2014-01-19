@@ -134,20 +134,27 @@ TorrentRendererFull.prototype =
 		eta = document.createElement('div');
 		eta.className = 'torrent_progress_eta';
 
-		image = document.createElement('div');
-		button = document.createElement('a');
+		pause_resume = document.createElement('div');
+		remove = document.createElement('div');
+		remove.className = 'button torrent_remove';
+		inspector = document.createElement('div');
+		inspector.className = 'button torrent_inspector';
+		button = document.createElement('div');
+		button.className = 'torrent_buttons';
 
-		button.appendChild(image);
+		button.appendChild(pause_resume);
+		button.appendChild(remove);
+		button.appendChild(inspector);
 
 		root.appendChild(poster);
 		//root.appendChild(details);
-		root.appendChild(progressbar.element);
+		poster.appendChild(progressbar.element);
 		root.appendChild(description);
 		description.appendChild(name);
 		description.appendChild(meta);
 		description.appendChild(eta);
 		//root.appendChild(peers);
-		root.appendChild(button);
+		poster.appendChild(button);
 
 		root._name_container = name;
 		root._meta_container = meta;
@@ -155,7 +162,7 @@ TorrentRendererFull.prototype =
 		root._progress_eta_container = eta;
 		root._progress_details_container = details;
 		root._progressbar = progressbar;
-		root._pause_resume_button_image = image;
+		root._pause_resume_button = pause_resume;
 		root._toggle_running_button = button;
 
 		return root;
@@ -198,11 +205,12 @@ TorrentRendererFull.prototype =
 	render: function(controller, t, root)
 	{
 		// name
-		setTextContent(root._meta_container, t.getEpisodeName());
-		setTextContent(root._name_container, t.getSeriesName());
+		if (t.fields.trakt)
+			setTextContent(root._meta_container, t.getMeta());
+		setTextContent(root._name_container, t.getName());
 
 		var e = root.getElementsByClassName("poster")[0];
-		$(e).css('background-image', 'url(' + t.getBackground() + ')');
+		$(e).css('background-image', 'url(' + t.getPoster() + ')');
 
 		//trackers
 		var trackers = t.getTrackers();
@@ -238,9 +246,8 @@ TorrentRendererFull.prototype =
 
 		// pause/resume button
 		var is_stopped = t.isStopped();
-		e = root._pause_resume_button_image;
-		e.alt = is_stopped ? 'Resume' : 'Pause';
-		e.className = is_stopped ? 'torrent_resume' : 'torrent_pause';
+		e = root._pause_resume_button;
+		e.className = is_stopped ? 'button torrent_resume' : 'button torrent_pause';
 	}
 };
 
@@ -266,9 +273,6 @@ TorrentRow.prototype =
 		var tor = this.getTorrent();
 		if (tor)
 			this._view.render(controller, tor, this.getElement());
-	},
-	isSelected: function() {
-		return this.getElement().className.indexOf('selected') !== -1;
 	},
 
 	getTorrent: function() {

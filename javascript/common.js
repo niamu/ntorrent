@@ -7,7 +7,6 @@
 
 var transmission,
     dialog,
-    isMobileDevice = RegExp("(iPhone|iPod|Android)").test(navigator.userAgent),
     scroll_timeout;
 
 if (!Array.indexOf){
@@ -38,19 +37,16 @@ $.fn.serializeObject = function()
 };
 
 $(document).ready(function() {
-	if (isMobileDevice){
-		window.onload = function(){ setTimeout(function() { window.scrollTo(0,1); },500); };
-		window.onorientationchange = function(){ setTimeout(function() { window.scrollTo(0,1); },100); };
-	}
-
 	// Initialise the dialog controller
 	dialog = new Dialog();
 
 	// Initialise the Trakt controller
 	trakt = new Trakt();
 
-	// Initialise the main Transmission controller
-	transmission = new Transmission();
+	$.when.apply($, trakt.data).done(function() {
+		// Initialise the main Transmission controller
+		transmission = new Transmission();
+	});
 });
 
 /**
@@ -156,9 +152,9 @@ Prefs._CompactDisplayState= 'compact_display_state';
 Prefs._Defaults =
 {
 	'filter': 'active',
-	'refresh_rate' : 3,
+	'refresh_rate' : 5,
 	'sort_direction': 'descending',
-	'sort_method': 'percent_completed',
+	'sort_method': 'age',
 	'turtle-state' : false,
 	'compact_display_state' : false
 };

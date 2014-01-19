@@ -46,7 +46,6 @@ Dialog.prototype = {
 	{
 		$('body.dialog_showing').removeClass('dialog_showing');
 		this._container.hide();
-		transmission.hideMobileAddressbar();
 		transmission.updateButtonStates();
 	},
 
@@ -74,8 +73,6 @@ Dialog.prototype = {
 	confirm: function(dialog_heading, dialog_message, confirm_button_label,
 	                  callback_function, callback_data, cancel_button_label)
 	{
-		if (!isMobileDevice)
-			$('.dialog_container').hide();
 		setTextContent(this._heading[0], dialog_heading);
 		setTextContent(this._message[0], dialog_message);
 		setTextContent(this._cancel_button[0], cancel_button_label || 'Cancel');
@@ -86,16 +83,12 @@ Dialog.prototype = {
 		$('body').addClass('dialog_showing');
 		this._container.show();
 		transmission.updateButtonStates();
-		if (isMobileDevice)
-			transmission.hideMobileAddressbar();
 	},
 
 	/*
 	 * Display an alert dialog
 	 */
 	alert: function(dialog_heading, dialog_message, cancel_button_label) {
-		if (!isMobileDevice)
-			$('.dialog_container').hide();
 		setTextContent(this._heading[0], dialog_heading);
 		setTextContent(this._message[0], dialog_message);
 		// jquery::hide() doesn't work here in Safari for some odd reason
@@ -106,8 +99,6 @@ Dialog.prototype = {
 		$('#move_container').hide();
 		$('body').addClass('dialog_showing');
 		transmission.updateButtonStates();
-		if (isMobileDevice)
-			transmission.hideMobileAddressbar();
 		this._container.show();
 	}
 	

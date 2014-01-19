@@ -99,37 +99,7 @@ Torrent.prototype =
 	{
 		this.fields = {};
 		this.fieldObservers = {};
-
-		//Check tracker and match it to proper injection function
-		if (trakt.library){
-			//trakt.populateTVTorrents();
-			//trakt.populateMovieTorrents();
-			//this.injectTraktData(data);
-		}
-	},
-
-	injectTraktTVData: function(data) {
-		seriesData = trakt.getSeries(data);
-
-		this.setField(data,"series_name",seriesData.title);
-		this.setField(data,"background",seriesData.poster.substring(0,seriesData.poster.length - 4) + "-300.jpg");
-		this.refresh(data);
-
-		var torrent = this;
-	},
-
-	injectTraktEpisodeData: function(data) {
-		episodeData = trakt.getEpisode(data);
-
-		trakt.rawEpisode.done(function(result) {
-			if (episodeData.episode < 10){
-				episodeData.episode = "0" + episodeData.episode;
-			}
-			torrent.setField(data,"episode_name",result.episode.title + " " + episodeData.season + "x" + episodeData.episode);
-			torrent.setField(data,"series_name",result.show.title);
-			torrent.setField(data,"background",result.show.images.poster.substring(0,result.show.images.poster.length - 4) + "-300.jpg");
-			torrent.refresh(data);
-		});
+		this.refresh (data);
 	},
 
 	notifyOnFieldChange: function(field, callback) {
@@ -150,6 +120,10 @@ Torrent.prototype =
 		}
 
 		o[name] = value;
+
+		// probably the best time to inject data; when we have the name and trackes and haven't injected data already
+		if (this.fields.name && this.fields.trackers && !this.fields.trakt && name != "production_code")
+			trakt.injectTorrent(this);
 		return true;
 	},
 
@@ -168,6 +142,8 @@ Torrent.prototype =
 					changed |= this.setField(myfile,key,f[key]);
 			myfiles[i] = myfile;
 		}
+		if (!this.fields.files)
+			console.log(myfiles);
 		this.fields.files = myfiles;
 		return changed;
 	},
@@ -240,10 +216,10 @@ Torrent.prototype =
 	getLastActivity: function() { return this.fields.activityDate; },
 	getLeftUntilDone: function() { return this.fields.leftUntilDone; },
 	getMetadataPercentComplete: function() { return this.fields.metadataPercentComplete; },
-	getName: function() { return this.fields.name || 'Unknown'; },
-	getSeriesName: function() { return this.fields.series_name || this.fields.name; },
-	getEpisodeName: function() { return this.fields.episode_name || this.fields.name; },
-	getBackground: function() { return this.fields.background || ''; },
+	getName: function() { if (this.fields.trakt) return this.fields.trakt.title;else return this.fields.name; },
+	getMeta: function() { return this.fields.production_code || this.fields.trakt.year; },
+	getPoster: function() { if (this.fields.trakt) return this.fields.trakt.images.poster.substring(0,this.fields.trakt.images.poster.length - 4) + "-300.jpg" || ''; },
+	getFanart: function() { if (this.fields.trakt) return this.fields.trakt.images.fanart.substring(0,this.fields.trakt.images.fanart.length - 4) + "-940.jpg" || ''; },
 	getPeers: function() { return this.fields.peers; },
 	getPeersConnected: function() { return this.fields.peersConnected; },
 	getPeersGettingFromUs: function() { return this.fields.peersGettingFromUs; },
@@ -291,6 +267,13 @@ Torrent.prototype =
 			default:                            return 'Error';
 		}
 	},
+	getMediaType: function() {
+		var tracker = this.fields.trackers[0];
+		if (tracker.announce.toLowerCase().indexOf(trakt.user.showTracker) != -1)
+			return "shows";
+		else if(tracker.announce.toLowerCase().indexOf(trakt.user.movieTracker) != -1)
+			return "movies";
+	},
 	seedRatioLimit: function(controller){
 		switch(this.getSeedRatioMode()) {
 			case Torrent._RatioUseGlobal: return controller.seedRatioLimit();
@@ -314,7 +297,7 @@ Torrent.prototype =
 	getCollatedName: function() {
 		var f = this.fields;
 		if (!f.collatedName && f.name)
-			f.collatedName = f.episode_name.toLowerCase() + " " + f.series_name.toLowerCase() + " " + f.name.toLowerCase();
+			f.collatedName = f.trakt.title.toLowerCase() + " " + f.name.toLowerCase();
 		return f.collatedName || '';
 	},
 	getCollatedTrackers: function() {

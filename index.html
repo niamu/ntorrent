@@ -6,12 +6,13 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<link href="./images/favicon.png" rel="shortcut icon" />
 	<link rel="apple-touch-icon" href="./images/webclip-icon.png"/>
-	<script type="text/javascript" src="./javascript/jquery/jquery.min.js"></script>
 
 	<link media="only screen and (max-device-width: 480px)" href="./style/transmission/mobile.css" type= "text/css" rel="stylesheet" />
 	<link media="screen and (min-device-width: 481px)" href="./style/transmission/common.css" type="text/css" rel="stylesheet" />
 
+	<script type="text/javascript" src="./javascript/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="./javascript/jquery/jquery.form.min.js"></script>
+	<script type="text/javascript" src="./javascript/jquery/jquery.knob.min.js"></script>
 	<script type="text/javascript" src="./javascript/jquery/json2.min.js"></script>
 	<script type="text/javascript" src="./javascript/trakt.js"></script>
 	<script type="text/javascript" src="./javascript/common.js"></script>
@@ -27,90 +28,91 @@
 	<title>Transmission</title>
 </head>
 <body id="transmission_body">
-
 	<div id="login">
 		<form name="login_form" id="login_form" action="#" method="post">
 			<h2>Trakt</h2>
 			<input type="text" name="name" id="trakt_username" placeholder="Username"/>
 			<input type="password" name="api" id="trakt_api" placeholder="API"/>
 			<h2>Trackers</h2>
-			<input type="text" name="tvTracker" id="trakt_tv"  placeholder="TV Tracker"/>
+			<input type="text" name="showTracker" id="trakt_tv"  placeholder="TV Tracker"/>
+			<input type="text" name="movieTracker" id="trakt_movie"  placeholder="Movie Tracker"/>
 			<input type="submit"/>
 		</form>
 	</div>
 
-	<div id="main">
+	<div id="top">
 		<div id="toolbar">
-			<div id="toolbar-open" title="Open Torrent"></div>
-			<div id="toolbar-remove" title="Remove Selected Torrents"></div>
-			<div id="toolbar-start-all" title="Start All Torrents"></div>
-			<div id="toolbar-pause-all" title="Pause All Torrents"></div>
-			<select id="filter-mode">
-				<option value="all">All States</option>
-				<option value="active">Active</option>
-				<option value="downloading">Downloading</option>
-				<option value="seeding">Seeding</option>
-				<option value="paused">Paused</option>
-				<option value="finished">Finished</option>
-			</select>
-			<select id="filter-tracker"></select>
+			<div class="button" id="toolbar-open"></div>
+			<div class="button" id="toolbar-start-all"></div>
+			<div class="button" id="toolbar-pause-all"></div>
+			<div class="button" id="turtle-button"></div>
+			<ul id="filter-mode">
+				<li><input type="radio" name="filter-mode" id="filter-all"/><label for="filter-all">All</label></li>
+				<li><input type="radio" name="filter-mode" id="filter-active"/><label for="filter-active">Active</label></li>
+				<li><input type="radio" name="filter-mode" id="filter-downloading"/><label for="filter-downloading">Downloading</label></li>
+				<li><input type="radio" name="filter-mode" id="filter-seeding"/><label for="filter-seeding">Seeding</label></li>
+				<li><input type="radio" name="filter-mode" id="filter-paused"/><label for="filter-paused">Paused</label></li>
+				<li><input type="radio" name="filter-mode" id="filter-finished"/><label for="filter-finished">Finished</label></li>
+			</ul>
+			<input type="text" id="torrent_search" />
+			<ul id="filter-tracker">
+				<li><input type="radio" name="filter-tracker" id="filter-both" checked="checked"/><label for="filter-both">Both</label></li>
+				<li><input type="radio" name="filter-tracker" id="filter-tv"/><label for="filter-tv">TV</label></li>
+				<li><input type="radio" name="filter-tracker" id="filter-movie"/><label for="filter-movie">Movies</label></li>
+			</ul>
+			<div id="user"></div>
 		</div>
 
-		<div id="right">
-			<div id="top">
-				<input type="search" id="torrent_search" placeholder="search" />
-
-				<div id="statusbar">
-					<div id="speed-info">
-						<div id="speed-dn-container">
-							<div id="speed-dn-label"></div>
-						</div>
-						<div id="turtle-button" title="Alternative Speed Limits">&nbsp;</div>
-						<div id="speed-up-container">
-							<div id="speed-up-label"></div>
-						</div>
-					</div>
+		<div id="meta">
+			<div id="stats">
+				<div id="torrent-count-container">
+					<div id="stats-torrent-count"></div>
+					<div class="stat-total">Total Torrents</div>
+				</div>
+				<div id="speed-dn-container">
+					<div id="speed-dn-label"></div>
+					<div class="stat-total" id="stats-total-downloaded"></div>
+				</div>
+				<div id="speed-up-container">
+					<div id="speed-up-label"></div>
+					<div class="stat-total" id="stats-total-uploaded"></div>
 				</div>
 			</div>
 
-			<div id="torrent_inspector" style="display:none;">
-				<ul id="inspector_file_list">
-				</ul>
+			<div class="dialog_container" id="dialog_container" style="display:none;">
+				<div class="dialog_window">
+					<div class="dialog_logo" id="dialog_logo"></div>
+					<h2 class="dialog_heading" id="dialog_heading"></h2>
+					<div class="dialog_message" id="dialog_message"></div>
+					<a href="#confirm" id="dialog_confirm_button">Confirm</a>
+					<a href="#cancel" id="dialog_cancel_button">Cancel</a>
+				</div>
 			</div>
 
-			<div id="torrent_container">
-				<ul class="torrent_list" id="torrent_list"></ul>
-				<div id="filter-count">&nbsp;</div>
+			<div class="dialog_container" id="upload_container" style="display:none;">
+				<div class="dialog_window">
+					<div class="dialog_logo" id="upload_dialog_logo"></div>
+					<h2 class="dialog_heading">Upload Torrent Files</h2>
+					<form action="#" method="post" id="torrent_upload_form" enctype="multipart/form-data">
+						<div class="dialog_message">
+							<label for="torrent_upload_file">Please select a torrent file to upload:</label>
+							<input type="file" name="torrent_files[]" id="torrent_upload_file" multiple="multiple" />
+							<label for="torrent_upload_url">Or enter a URL:</label>
+							<input type="url" id="torrent_upload_url"/>
+						</div>
+						<a href="#upload" id="upload_confirm_button">Upload</a>
+						<a href="#cancel" id="upload_cancel_button">Cancel</a>
+					</form>
+				</div>
 			</div>
 		</div>
+	</div>
 
-		<div class="dialog_container" id="dialog_container" style="display:none;">
-			<div class="dialog_top_bar"></div>
-			<div class="dialog_window">
-				<div class="dialog_logo" id="dialog_logo"></div>
-				<h2 class="dialog_heading" id="dialog_heading"></h2>
-				<div class="dialog_message" id="dialog_message"></div>
-				<a href="#confirm" id="dialog_confirm_button">Confirm</a>
-				<a href="#cancel" id="dialog_cancel_button">Cancel</a>
-			</div>
-		</div>
-
-		<div class="dialog_container" id="upload_container" style="display:none;">
-			<div class="dialog_top_bar"></div>
-			<div class="dialog_window">
-				<div class="dialog_logo" id="upload_dialog_logo"></div>
-				<h2 class="dialog_heading">Upload Torrent Files</h2>
-				<form action="#" method="post" id="torrent_upload_form" enctype="multipart/form-data">
-					<div class="dialog_message">
-						<label for="torrent_upload_file">Please select a torrent file to upload:</label>
-						<input type="file" name="torrent_files[]" id="torrent_upload_file" multiple="multiple" />
-						<label for="torrent_upload_url">Or enter a URL:</label>
-						<input type="url" id="torrent_upload_url"/>
-					</div>
-					<a href="#upload" id="upload_confirm_button">Upload</a>
-					<a href="#cancel" id="upload_cancel_button">Cancel</a>
-				</form>
-			</div>
+	<div id="torrent_container">
+		<ul class="torrent_list" id="torrent_list"></ul>
+		<div id="torrent_inspector" style="display:none;">
+			<div class="fanart"></div>
+			<ul id="inspector_file_list"></ul>
 		</div>
 	</div>
 </body>

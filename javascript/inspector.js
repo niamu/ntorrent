@@ -39,19 +39,6 @@ function Inspector(controller) {
     },
 
     updateInspector = function () {
-        var e = data.elements,
-            torrents = data.torrents,
-            name;
-
-        // update the name, which is shown on all the pages
-        if (!torrents || !torrents.length)
-            name = 'No Selection';
-        else if(torrents.length === 1)
-            name = torrents[0].getName();
-        else
-            name = '' + torrents.length+' Transfers Selected';
-        setTextContent(e.name_lb, name || na);
-
         updateFilesPage();
     },
 
@@ -66,10 +53,6 @@ function Inspector(controller) {
 
     onFileWantedToggled = function(ev, fileIndices, want) {
         changeFileCommand(fileIndices, want?'files-wanted':'files-unwanted');
-    },
-
-    onNameClicked = function(ev, fileRow, fileIndices) {
-        $(fileRow.getElement()).siblings().slideToggle();
     },
 
     clearFileList = function() {
@@ -124,26 +107,20 @@ function Inspector(controller) {
         var row;
         row = new FileRow(tor, sub.depth, sub.name, sub.file_indices, i%2);
         data.file_rows.push(row);
-        parent.appendChild(row.getElement());
+        parent.append(row.getElement());
         $(row).bind('wantedToggled',onFileWantedToggled);
-        $(row).bind('nameClicked',onNameClicked);
     },
 
     addSubtreeToView = function (tor, parent, sub, i, issub) {
         var key, div;
         if (issub){
-            div = parent;
-        }else{
-            div = document.createElement('div');
+            div = $("#inspector_file_list");
         }
         if (sub.parent)
             addNodeToView (tor, div, sub, i++);
         if (sub.children)
             for (key in sub.children)
                 i = addSubtreeToView (tor, div, sub.children[key],null,"yes");
-        if (!issub){
-            parent.appendChild(div);
-        }
         return i;
     },
                 
@@ -178,16 +155,8 @@ function Inspector(controller) {
     },
 
     initialize = function (controller) {
-
-        var ti = '#torrent_inspector_';
-
         data.controller = controller;
-
         data.elements.file_list      = $('#inspector_file_list')[0];
-
-        // force initial 'N/A' updates on all the pages
-        updateInspector();
-        updateFilesPage();
     };
 
     /****
@@ -201,6 +170,8 @@ function Inspector(controller) {
         $(d.torrents).unbind('dataChanged.inspector');
         $(torrents).bind('dataChanged.inspector', $.proxy(updateInspector,this));
         d.torrents = torrents;
+
+        $('#torrent_inspector .fanart').css('background-image', 'url(' + d.torrents[0].getFanart() + ')');
 
         // periodically ask for updates to the inspector's torrents
         clearInterval(d.refreshInterval);

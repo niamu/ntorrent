@@ -169,18 +169,18 @@ Transmission.fmt = (function()
 			var speed = KBps;
 
 			if (speed <= 999.95) // 0 KBps to 999 K
-				return [ speed.toTruncFixed(0) ];
+				return [ speed.toTruncFixed(0), speed_K_str ].join(' ');
 
 			speed /= speed_K;
 
 			if (speed <= 99.995) // 1 M to 99.99 M
-				return [ speed.toTruncFixed(2) ];
+				return [ speed.toTruncFixed(2), speed_M_str ].join(' ');
 			if (speed <= 999.95) // 100 M to 999.9 M
-				return [ speed.toTruncFixed(1) ];
+				return [ speed.toTruncFixed(1), speed_M_str ].join(' ');
 
 			// insane speeds
 			speed /= speed_K;
-			return [ speed.toTruncFixed(2) ];
+			return [ speed.toTruncFixed(2), speed_G_str ].join(' ');
 		},
 
 		timeInterval: function(seconds)
