@@ -44,7 +44,6 @@ Dialog.prototype = {
 
 	hideDialog: function()
 	{
-		$('body.dialog_showing').removeClass('dialog_showing');
 		this._container.hide();
 		transmission.updateButtonStates();
 	},
@@ -80,7 +79,6 @@ Dialog.prototype = {
 		this._confirm_button.show();
 		this._callback_function = callback_function;
 		this._callback_data = callback_data;
-		$('body').addClass('dialog_showing');
 		this._container.show();
 		transmission.updateButtonStates();
 	},
@@ -97,7 +95,6 @@ Dialog.prototype = {
 		// Just in case
 		$('#upload_container').hide();
 		$('#move_container').hide();
-		$('body').addClass('dialog_showing');
 		transmission.updateButtonStates();
 		this._container.show();
 	}
