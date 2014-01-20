@@ -778,19 +778,16 @@ Transmission.prototype =
 	onFilterTrackerClicked: function(ev)
 	{
 		var tracker, type = ev.target.id.substr(7);
-		if (type == "tv")
-			tracker = trakt.user.showTracker;
-		if (type == "movie")
-			tracker = trakt.user.movieTracker;
-		if (type == "all")
+		tracker = type;
+		if (tracker == "both")
 			tracker = null;
+		console.log(tracker);
 		this.setFilterTracker(tracker);
 	},
 
 	setFilterTracker: function(domain)
 	{
 		// update which tracker is selected in the popup
-		var key = domain ? this.getReadableDomain(domain) : 'all';
 		this.filterTracker = domain;
 		this.refilter(true);
 	},

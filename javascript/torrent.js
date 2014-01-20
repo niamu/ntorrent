@@ -345,7 +345,7 @@ Torrent.prototype =
 	 * @param search substring to look for, or null
 	 * @return true if it passes the test, false if it fails
 	 */
-	test: function(state, search, tracker)
+	test: function(state, search, mediaType)
 	{
 		// flter by state...
 		var pass = this.testState(state);
@@ -354,9 +354,9 @@ Torrent.prototype =
 		if (pass && search && search.length)
 			pass = this.getCollatedName().indexOf(search.toLowerCase()) !== -1;
 
-		// maybe filter by tracker...
-		if (pass && tracker && tracker.length)
-			pass = this.getCollatedTrackers().indexOf(tracker) !== -1;
+		// maybe filter by mediaType...
+		if (pass && mediaType && mediaType.length)
+			pass = this.getMediaType().indexOf(mediaType) !== -1;
 
 		return pass;
 	}
