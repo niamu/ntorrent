@@ -288,7 +288,7 @@ Transmission.prototype =
 				if (needed && !t.needsMetaData())
 					needinfo.push(id);
 			}
-			else if (tracker && (tracker == trakt.user.showTracker || tracker == trakt.user.movieTracker)) {
+			else if (tracker && (trakt.user.showTracker.indexOf(tracker) >= 0 || trakt.user.movieTracker.indexOf(tracker) >= 0)) {
 				t = this._torrents[id] = new Torrent(o);
 				this.dirtyTorrents[id] = true;
 				callback = $.proxy(this.onTorrentChanged,this);

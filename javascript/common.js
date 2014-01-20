@@ -42,11 +42,6 @@ $(document).ready(function() {
 
 	// Initialise the Trakt controller
 	trakt = new Trakt();
-
-	$.when.apply($, trakt.data).done(function() {
-		// Initialise the main Transmission controller
-		transmission = new Transmission();
-	});
 });
 
 /**

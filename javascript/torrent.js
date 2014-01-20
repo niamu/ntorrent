@@ -269,9 +269,12 @@ Torrent.prototype =
 	},
 	getMediaType: function() {
 		var tracker = this.fields.trackers[0];
-		if (tracker.announce.toLowerCase().indexOf(trakt.user.showTracker) != -1)
+		var announce = tracker.announce;
+		var uri = parseUri(announce);
+		uri.domain = transmission.getDomainName (uri.host);
+		if (trakt.user.showTracker.indexOf(uri.domain) >= 0)
 			return "shows";
-		else if(tracker.announce.toLowerCase().indexOf(trakt.user.movieTracker) != -1)
+		else if(trakt.user.movieTracker.indexOf(uri.domain) >= 0)
 			return "movies";
 	},
 	seedRatioLimit: function(controller){

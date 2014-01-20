@@ -14,8 +14,10 @@ Trakt.prototype =
 				e.preventDefault();
 				trakt.verifyLogin($('#login_form').serializeObject());
 			}
-			trakt.getTraktData();
-			trakt.renderUser();
+			if (trakt.user){
+				trakt.getTraktData();
+				trakt.renderUser();
+			}
 			$("#login").remove();
 		}
 
@@ -46,9 +48,11 @@ Trakt.prototype =
 				if (result.username){
 					trakt.user = result;
 					trakt.user.api = login.api;
-					trakt.user.showTracker = login.showTracker;
-					trakt.user.movieTracker = login.movieTracker;
+					trakt.user.showTracker = login.showTracker.toLowerCase().split(',');
+					trakt.user.movieTracker = login.movieTracker.toLowerCase().split(',');
 					localStorage.setItem('trakt',JSON.stringify(trakt.user));
+					trakt.getTraktData();
+					trakt.renderUser();
 				}
 			});
 		}
@@ -78,6 +82,9 @@ Trakt.prototype =
     		trakt.shows = JSON.parse(sessionStorage.getItem("shows"));
     		trakt.movies = JSON.parse(sessionStorage.getItem("movies"));
 		}
+		$.when.apply($, trakt.data).done(function() {
+			transmission = new Transmission(); // Initialise the main Transmission controller
+		});
 	},
 
 	injectTorrent: function(torrent)

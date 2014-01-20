@@ -226,7 +226,6 @@ input#torrent_search:focus {
 #stats #speed-up-container:after { background: #ddd url("images/alt-arrow-up.png") 50% 50% / 32px 32px no-repeat; }
 .stat-total {
 	font-size: 18px;
-	font-weight: lighter;
 	line-height: 1.2em;
 }
 /*** TORRENT CONTAINER ***/
