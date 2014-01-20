@@ -781,7 +781,6 @@ Transmission.prototype =
 		tracker = type;
 		if (tracker == "both")
 			tracker = null;
-		console.log(tracker);
 		this.setFilterTracker(tracker);
 	},
 
