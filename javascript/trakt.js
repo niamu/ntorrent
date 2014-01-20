@@ -48,8 +48,8 @@ Trakt.prototype =
 				if (result.username){
 					trakt.user = result;
 					trakt.user.api = login.api;
-					trakt.user.showTracker = login.showTracker.toLowerCase().split(',');
-					trakt.user.movieTracker = login.movieTracker.toLowerCase().split(',');
+					trakt.user.showTracker = login.showTracker.toLowerCase().replace(', ',',').split(',');
+					trakt.user.movieTracker = login.movieTracker.toLowerCase().replace(', ',',').split(',');
 					localStorage.setItem('trakt',JSON.stringify(trakt.user));
 					trakt.getTraktData();
 					trakt.renderUser();
