@@ -63,20 +63,31 @@ Trakt.prototype =
 		var urls = [];
 		urls.push("http://api.trakt.tv/user/library/shows/all.json/" + trakt.user.api + "/" + trakt.user.username + "?callback=?");
 		urls.push("http://api.trakt.tv/user/library/movies/all.json/" + trakt.user.api + "/" + trakt.user.username + "?callback=?");
+		urls.push("http://api.trakt.tv/user/watchlist/shows.json/" + trakt.user.api + "/" + trakt.user.username + "?callback=?");
+		urls.push("http://api.trakt.tv/user/watchlist/movies.json/" + trakt.user.api + "/" + trakt.user.username + "?callback=?");
 		if (!sessionStorage.getItem("shows") && !sessionStorage.getItem("movies")){
 			trakt.data = [];
-			var result = 0;
+			var shows = [],movies = [];
 			$.each(urls, function (i, url) {
+				var datatype = url.match(/\/[l|w].+\/(movies|shows)/)[1];
 			    trakt.data.push(
 			        $.getJSON(url, function (json) {
-			        	var datatype = url.match(/\/library\/([^\/]+)/)[1];
+			        	console.log(datatype);
 			        	if (datatype == "shows")
-			        		trakt.shows = json;
+			        		shows.push(json);
 			        	else
-			        		trakt.movies = json;
-						sessionStorage.setItem(datatype, JSON.stringify(json));
-			        })
-			    );
+			        		movies.push(json);
+			        }).done(function() {
+			        	if (shows.length == 2){
+			        		trakt.shows = shows[0].concat(shows[1]);
+			        		sessionStorage.setItem(datatype, JSON.stringify(trakt.shows));
+			        	}
+						if (movies.length == 2){
+							trakt.movies = movies[0].concat(movies[1]);
+							sessionStorage.setItem(datatype, JSON.stringify(trakt.movies));
+						}
+					})
+				);
 			});
 		}else{
     		trakt.shows = JSON.parse(sessionStorage.getItem("shows"));
