@@ -299,7 +299,7 @@ Torrent.prototype =
 	},
 	getCollatedName: function() {
 		var f = this.fields;
-		if (!f.collatedName && f.name)
+		if (!f.collatedName && f.name && f.trakt)
 			f.collatedName = f.trakt.title.toLowerCase() + " " + f.name.toLowerCase();
 		return f.collatedName || '';
 	},
