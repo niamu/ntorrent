@@ -301,6 +301,8 @@ Torrent.prototype =
 		var f = this.fields;
 		if (!f.collatedName && f.name && f.trakt)
 			f.collatedName = f.trakt.title.toLowerCase() + " " + f.name.toLowerCase();
+		else
+			f.collatedName = f.name.toLowerCase();
 		return f.collatedName || '';
 	},
 	getCollatedTrackers: function() {
