@@ -147,7 +147,7 @@ Trakt.prototype =
 			var library = trakt.movies;
 
 		for (var i = 0; i < library.length; i++) {
-			var title = library[i].title.replace(/[\:\(\)]/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
+			var title = library[i].title.replace(/[\:\(\)\']/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
 
 			var re = new RegExp("^"+title);
 			if (clean_name.match(re)){
