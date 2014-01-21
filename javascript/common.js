@@ -148,7 +148,7 @@ Prefs._Defaults =
 {
 	'filter': 'active',
 	'refresh_rate' : 5,
-	'sort_direction': 'descending',
+	'sort_direction': 'ascending',
 	'sort_method': 'age',
 	'turtle-state' : false,
 	'compact_display_state' : false
