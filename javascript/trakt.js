@@ -72,7 +72,6 @@ Trakt.prototype =
 				var datatype = url.match(/\/[l|w].+\/(movies|shows)/)[1];
 			    trakt.data.push(
 			        $.getJSON(url, function (json) {
-			        	console.log(datatype);
 			        	if (datatype == "shows")
 			        		shows.push(json);
 			        	else
