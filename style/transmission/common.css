@@ -250,7 +250,7 @@ ul.torrent_list {
 ul.torrent_list li.torrent .poster {
   border-radius: 3px;
   height: 355px;
-  background:50% 50% / cover no-repeat;
+  background: #111 50% 50% / cover no-repeat;
 }
 ul.torrent_list li.torrent .torrent_buttons {
   margin:10px 0 0 42px;
