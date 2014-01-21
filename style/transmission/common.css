@@ -163,7 +163,7 @@ input#torrent_search {
   position: relative;
   float: left;
   height: 35px;
-  width: 200px;
+  width: 180px;
   margin: 0 10px;
   font-size: 14px;
   border-radius: 18px;
@@ -520,4 +520,39 @@ ul.torrent_list .torrent_progress_bar.incomplete.seeding {
 #move_container input#torrent_path {
   width: 286px;
   padding: 2px;
+}
+
+@media all and (max-width: 1200px) {
+	#user h3.user-name {
+		display: none;
+	}
+}
+@media all and (max-width: 1099px) {
+	#filter-tracker {
+		display: none;
+	}
+}
+@media all and (max-width: 1023px) {
+	#filter-tracker {
+		display: none;
+	}
+	#stats {
+		width: 710px;
+	}
+	#stats #speed-up-container, #stats #speed-dn-container, #stats #torrent-count-container {
+		width: 140px;
+	}
+}
+@media all and (max-width: 920px) {
+	#filter-mode {
+		display: none;
+	}
+}
+@media all and (max-width: 768px) {
+	
+}
+@media all and (max-width: 500px) {
+	#torrent_search {
+		display: none;
+	}
 }
