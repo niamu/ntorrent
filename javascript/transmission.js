@@ -47,6 +47,8 @@ Transmission.prototype =
 
 		$('#turtle-button').click($.proxy(this.toggleTurtleClicked,this));
 
+		$('#inspector-close').click($.proxy(this.hideInspector,this));
+
 		// tell jQuery to copy the dataTransfer property from events over if it exists
 		jQuery.event.props.push("dataTransfer");
 
@@ -378,7 +380,7 @@ Transmission.prototype =
 
 		// handle the per-row "torrent_inspector" button
 		if (ev.target.className === 'button torrent_inspector') {
-			this.toggleInspector(torrents);
+			this.showInspector(torrents);
 			return;
 		}
 	},
@@ -609,11 +611,16 @@ Transmission.prototype =
 	*****
 	****/
 
-	toggleInspector: function(torrents)
+	showInspector: function(torrents)
 	{
-		var visible = $('#torrent_inspector').is(':visible');
+		$('body').addClass('inspector_showing');
 		this.inspector.setTorrents(torrents);
-		$('#torrent_inspector').toggle(!visible);
+		$('#torrent_inspector').show();
+	},
+
+	hideInspector: function(torrents)
+	{
+		$('body').removeClass('inspector_showing');
 	},
 
 	/****

@@ -32,6 +32,10 @@ body {
   font-weight: 400;
   color: #bbb;
   background: #F6F6F6;
+  -webkit-transition: -webkit-transform 0.25s ease-out;
+}
+body.inspector_showing {
+  -webkit-transform: translateX(-400px);
 }
 body img {
   border: none;
@@ -97,13 +101,13 @@ input[type="text"],input[type="password"] {
 }
 
 #top {
-	position: fixed;
-	width:100%;
-	z-index: 1;
+  position: fixed;
+  width:100%;
+  z-index: 1;
 }
 
 /*** TOOLBAR ***/
-#toolbar {
+.toolbar {
   font-family: 'Titillium Web';
   height:70px;
   width:100%;
@@ -113,33 +117,34 @@ input[type="text"],input[type="password"] {
   background-color: #111;
   text-transform: uppercase;
 }
-#toolbar #toolbar-open:after { background-image: url("images/alt-plus.png"); }
-#toolbar #toolbar-start-all:after { background-image: url("images/alt-play.png"); }
-#toolbar #toolbar-pause-all:after { background-image: url("images/alt-pause.png"); }
-#toolbar #turtle-button:after { background-image: url("images/alt-clock.png"); }
-#toolbar #turtle-button.selected:after { opacity: 1; }
-#toolbar #turtle-button.selected {
+.toolbar #toolbar-open:after { background-image: url("images/alt-plus.png"); }
+.toolbar #inspector-close:after { background-image: url("images/alt-delete.png"); }
+.toolbar #toolbar-start-all:after { background-image: url("images/alt-play.png"); }
+.toolbar #toolbar-pause-all:after { background-image: url("images/alt-pause.png"); }
+.toolbar #turtle-button:after { background-image: url("images/alt-clock.png"); }
+.toolbar #turtle-button.selected:after { opacity: 1; }
+.toolbar #turtle-button.selected {
   background: #3CAFFF;
 }
 #filter-mode, #filter-tracker {
-	position: relative;
-	float: left;
-	margin:0 10px;
+  position: relative;
+  float: left;
+  margin:0 10px;
 }
 #filter-mode li, #filter-tracker li {
-	display: inline-block;
-	color:#555;
-	line-height: 34px;
-	margin:0 5px;
+  display: inline-block;
+  color:#555;
+  line-height: 34px;
+  margin:0 5px;
 }
 #filter-mode li input, #filter-tracker li input {
-	display: none;
+  display: none;
 }
 #filter-mode li input:checked + label, #filter-tracker li input:checked + label {
-	color:#FFF;
+  color:#FFF;
 }
-#toolbar label:hover {
-	color:#999;
+.toolbar label:hover {
+  color:#999;
 }
 #user {
   position: relative;
@@ -177,9 +182,9 @@ input#torrent_search:focus {
 
 /*** STATUSBAR ***/
 #meta {
-	position: relative;
-	display: inline-block;
-	width:100%;
+  position: relative;
+  display: inline-block;
+  width:100%;
   height:165px;
   background:#FFF;
 }
@@ -212,12 +217,12 @@ input#torrent_search:focus {
   line-height: 1em;
 }
 #stats #speed-up-container:after, #stats #speed-dn-container:after, #stats #torrent-count-container:after {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 62px;
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 62px;
   height: 62px;
   border-radius: 3px;
 }
@@ -225,14 +230,14 @@ input#torrent_search:focus {
 #stats #speed-dn-container:after { background: #ddd url("images/alt-arrow-down.png") 50% 50% / 32px 32px no-repeat; }
 #stats #speed-up-container:after { background: #ddd url("images/alt-arrow-up.png") 50% 50% / 32px 32px no-repeat; }
 .stat-total {
-	font-size: 18px;
-	line-height: 1.2em;
+  font-size: 18px;
+  line-height: 1.2em;
 }
 /*** TORRENT CONTAINER ***/
 #torrent_container {
-	position: relative;
-	padding-top:238px;
-	height: 100%;
+  position: relative;
+  padding-top:238px;
+  height: 100%;
   background: #F6F6F6;
   box-sizing: border-box;
 }
@@ -240,9 +245,10 @@ input#torrent_search:focus {
 ul.torrent_list {
   display: inline-block;
   width:100%;
-  padding-bottom:15px;
  }
  ul.torrent_list li.torrent {
+  position: relative;
+  list-style: none;
   float: left;
   width: 240px;
   margin: 5px 0 0 5px;
@@ -253,6 +259,7 @@ ul.torrent_list li.torrent .poster {
   background: #111 50% 50% / cover no-repeat;
 }
 ul.torrent_list li.torrent .torrent_buttons {
+  display: inline-block;
   margin:10px 0 0 42px;
 }
 ul.torrent_list li.torrent .torrent_resume:after { background-image: url("images/alt-play.png"); }
@@ -260,20 +267,25 @@ ul.torrent_list li.torrent .torrent_pause:after { background-image: url("images/
 ul.torrent_list li.torrent .torrent_remove:after { background-image: url("images/alt-bin.png"); }
 ul.torrent_list li.torrent .torrent_inspector:after { background-image: url("images/alt-folder.png"); }
 ul.torrent_list li.torrent .torrent_description {
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: right;
   white-space: nowrap;
-  width: 100%;
+  color:#EEE;
+  text-shadow: 1px 1px 2px #000;
 }
 ul.torrent_list li.torrent .torrent_description span.torrent_meta {
-  margin-left:0.25em;
-}
-ul.torrent_list li.torrent .torrent_description span.torrent_name {
-  color:#888;
+  margin-right: 10px;
+  font-size: 28px;
+  font-weight: lighter;
 }
 ul.torrent_list li.torrent .torrent_progress_eta {
+  margin-right: 10px;
   display: block;
-  font-size:12px;
+  font-size:13px;
 }
 ul.torrent_list li.torrent .torrent_progress_details {
   width:100%;
@@ -310,64 +322,71 @@ ul.torrent_list li.torrent .torrent_peer_details.error {
 ul.torrent_list li.torrent.selected .torrent_progress_details.error, ul.torrent_list li.torrent.selected .torrent_peer_details.error {
   color: #FFF;
 }
-ul.torrent_list .torrent_progress_bar_container {
+ul.torrent_list .progress_container {
   height: 3px;
   position: relative;
 }
-ul.torrent_list .torrent_progress_bar {
+ul.torrent_list .progress {
+  margin:2px 0;
   height: 100%;
   top: 0px;
   left: 0px;
 }
-ul.torrent_list .torrent_progress_bar.complete.paused {
+ul.torrent_list .progress.complete.paused {
   background: rgba(131, 131, 131, 1);
 }
-ul.torrent_list .torrent_progress_bar.complete.magnet {
+ul.torrent_list .progress.complete.magnet {
   background: rgba(0, 162, 213, 1);
 }
-ul.torrent_list .torrent_progress_bar.complete.leeching {
+ul.torrent_list .progress.complete.leeching {
   background: rgba(0, 162, 213, 1);
 }
-ul.torrent_list .torrent_progress_bar.complete.seeding {
+ul.torrent_list .progress.complete.seeding {
   background: rgba(60, 210, 7, 1);
 }
-ul.torrent_list .torrent_progress_bar.incomplete {
+ul.torrent_list .progress.incomplete {
   width: 100%;
 }
-ul.torrent_list .torrent_progress_bar.incomplete.paused {
+ul.torrent_list .progress.incomplete.paused {
   background: rgba(131, 131, 131, 0.3);
 }
-ul.torrent_list .torrent_progress_bar.incomplete.magnet {
+ul.torrent_list .progress.incomplete.magnet {
   background: rgba(0, 162, 213, 0.3);
 }
-ul.torrent_list .torrent_progress_bar.incomplete.leeching {
+ul.torrent_list .progress.incomplete.leeching {
   background: rgba(0, 162, 213, 0.3);
 }
-ul.torrent_list .torrent_progress_bar.incomplete.seeding {
+ul.torrent_list .progress.incomplete.seeding {
   background: rgba(60, 210, 7, 0.3);
 }
 
 /*** TORRENT INSPECTOR ***/
 #torrent_inspector {
   position: fixed;
-  top: 235px;
-  right: 0px;
+  top:0px;
+  right: -400px;
   white-space: nowrap;
   overflow-y: scroll;
   overflow-x: hidden;
   text-overflow: ellipsis;
   -webkit-overflow-scrolling: touch;
-  background: #FFF;
+  background: #F6F6F6;
   width: 400px;
   height: 100%;
-}
-#torrent_inspector .fanart {
-	width: 100%;
-	height: 225px;
-	background: #222 center center / cover no-repeat;
+  box-shadow: 0px 80px 20px #888;
+  z-index: 1;
 }
 #torrent_inspector #inspector-close {
-  display: none;
+  float:right;
+  margin:0;
+}
+#torrent_inspector .toolbar span {
+  line-height: 34px;
+}
+#torrent_inspector .fanart {
+  width: 100%;
+  height: 165px;
+  background: #FFF center center / cover no-repeat;
 }
 #torrent_inspector #inspector_file_list {
   padding: 0 0 0 0;
@@ -433,7 +452,7 @@ ul.torrent_list .torrent_progress_bar.incomplete.seeding {
 }
 
 .dialog_container .dialog_window {
-	position: relative;
+  position: relative;
   margin: 0 auto;
   width: 420px;
 }
@@ -518,36 +537,36 @@ ul.torrent_list .torrent_progress_bar.incomplete.seeding {
 }
 
 @media all and (max-width: 1200px) {
-	#user h3.user-name {
-		display: none;
-	}
+  #user h3.user-name {
+    display: none;
+  }
 }
 @media all and (max-width: 1099px) {
-	#filter-tracker {
-		display: none;
-	}
+  #filter-tracker {
+    display: none;
+  }
 }
 @media all and (max-width: 1023px) {
-	#filter-tracker {
-		display: none;
-	}
-	#stats {
-		width: 710px;
-	}
-	#stats #speed-up-container, #stats #speed-dn-container, #stats #torrent-count-container {
-		width: 140px;
-	}
+  #filter-tracker {
+    display: none;
+  }
+  #stats {
+    width: 710px;
+  }
+  #stats #speed-up-container, #stats #speed-dn-container, #stats #torrent-count-container {
+    width: 140px;
+  }
 }
 @media all and (max-width: 920px) {
-	#filter-mode {
-		display: none;
-	}
+  #filter-mode {
+    display: none;
+  }
 }
 @media all and (max-width: 768px) {
-	
+  
 }
 @media all and (max-width: 500px) {
-	#torrent_search {
-		display: none;
-	}
+  #torrent_search {
+    display: none;
+  }
 }

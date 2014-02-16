@@ -37,8 +37,8 @@ TorrentRendererHelper.getProgressInfo = function(controller, t)
 
 	return {
 		percent: pct,
-		complete: [ 'torrent_progress_bar', 'complete', extra ].join(' '),
-		incomplete: [ 'torrent_progress_bar', 'incomplete', extra ].join(' ')
+		complete: [ 'progress', 'complete', extra ].join(' '),
+		incomplete: [ 'progress', 'incomplete', extra ].join(' ')
 	};
 };
 
@@ -47,13 +47,13 @@ TorrentRendererHelper.createProgressbar = function(classes)
 	var complete, incomplete, progressbar;
 
 	complete = document.createElement('div');
-	complete.className = 'torrent_progress_bar complete';
+	complete.className = 'progress complete';
 
 	incomplete = document.createElement('div');
-	incomplete.className = 'torrent_progress_bar incomplete';
+	incomplete.className = 'progress incomplete';
 
 	progressbar = document.createElement('div');
-	progressbar.className = 'torrent_progress_bar_container';
+	progressbar.className = 'progress_container';
 	progressbar.appendChild(complete);
 	progressbar.appendChild(incomplete);
 
@@ -114,9 +114,6 @@ TorrentRendererFull.prototype =
 		poster = document.createElement('div');
 		poster.className = 'poster';
 
-		name = document.createElement('span');
-		name.className = 'torrent_name';
-
 		meta = document.createElement('span');
 		meta.className = 'torrent_meta';
 
@@ -131,7 +128,7 @@ TorrentRendererFull.prototype =
 		details = document.createElement('div');
 		details.className = 'torrent_progress_details';
 
-		eta = document.createElement('div');
+		eta = document.createElement('span');
 		eta.className = 'torrent_progress_eta';
 
 		pause_resume = document.createElement('div');
@@ -148,15 +145,13 @@ TorrentRendererFull.prototype =
 
 		root.appendChild(poster);
 		//root.appendChild(details);
-		poster.appendChild(progressbar.element);
-		root.appendChild(description);
-		description.appendChild(name);
-		description.appendChild(meta);
 		description.appendChild(eta);
+		description.appendChild(meta);
+		description.appendChild(progressbar.element);
 		//root.appendChild(peers);
 		poster.appendChild(button);
+		poster.appendChild(description);
 
-		root._name_container = name;
 		root._meta_container = meta;
 		root._peer_details_container = peers;
 		root._progress_eta_container = eta;
@@ -207,7 +202,6 @@ TorrentRendererFull.prototype =
 		// name
 		if (t.fields.trakt)
 			setTextContent(root._meta_container, t.getMeta());
-		setTextContent(root._name_container, t.getName());
 
 		var e = root.getElementsByClassName("poster")[0];
 		$(e).css('background-image', 'url(' + t.getPoster() + ')');
