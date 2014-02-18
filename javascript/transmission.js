@@ -281,8 +281,15 @@ Transmission.prototype =
 		for (i=0; o=updates[i]; ++i)
 		{
 			id = o.id;
-			if (o.trackers)
-				tracker = this.getDomainName(parseUri(o.trackers[0].announce).host);
+			if (o.trackers){
+				tracker = o.trackers.filter(function (tracker){
+					var test = transmission.getDomainName(parseUri(tracker.announce).host);
+					if (trakt.user.showTracker.indexOf(test) != -1 || trakt.user.movieTracker.indexOf(test) != -1){
+						return tracker;
+					}
+				});
+				tracker = this.getDomainName(parseUri(tracker[0].announce).host);
+			}
 			if ((t = this._torrents[id]))
 			{
 				needed = t.needsMetaData();
@@ -290,7 +297,7 @@ Transmission.prototype =
 				if (needed && !t.needsMetaData())
 					needinfo.push(id);
 			}
-			else if (tracker && (trakt.user.showTracker.indexOf(tracker) >= 0 || trakt.user.movieTracker.indexOf(tracker) >= 0)) {
+			else if (tracker) {
 				t = this._torrents[id] = new Torrent(o);
 				this.dirtyTorrents[id] = true;
 				callback = $.proxy(this.onTorrentChanged,this);
