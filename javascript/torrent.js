@@ -142,8 +142,6 @@ Torrent.prototype =
 					changed |= this.setField(myfile,key,f[key]);
 			myfiles[i] = myfile;
 		}
-		if (!this.fields.files)
-			console.log(myfiles);
 		this.fields.files = myfiles;
 		return changed;
 	},

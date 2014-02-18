@@ -372,7 +372,7 @@ ul.torrent_list .progress.incomplete.seeding {
   -webkit-overflow-scrolling: touch;
   background: #F6F6F6;
   width: 400px;
-  height: 100%;
+  height: 1000%;
   box-shadow: 0px 80px 20px #888;
   z-index: 1;
 }
@@ -380,8 +380,18 @@ ul.torrent_list .progress.incomplete.seeding {
   float:right;
   margin:0;
 }
-#torrent_inspector .toolbar span {
+#torrent_inspector .toolbar .title {
   line-height: 34px;
+  max-width: 85%;
+  float:left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+#torrent_inspector span.torrent_name {
+  color:#FFF;
+}
+#torrent_inspector span.torrent_meta {
+  margin-left:0.3em;
 }
 #torrent_inspector .fanart {
   width: 100%;
@@ -389,17 +399,7 @@ ul.torrent_list .progress.incomplete.seeding {
   background: #FFF center center / cover no-repeat;
 }
 #torrent_inspector #inspector_file_list {
-  padding: 0 0 0 0;
-  margin: 0 0 0 0;
-  text-align: left;
-  cursor: default;
-  overflow: hidden;
-}
-#torrent_inspector #inspector_file_list {
   width: 100%;
-  margin: 6px 0 0 0;
-  padding-top: 6px;
-  padding-bottom: 10px;
   text-align: left;
   display: block;
   cursor: default;
@@ -408,33 +408,23 @@ ul.torrent_list .progress.incomplete.seeding {
   list-style-image: none;
   clear: both;
 }
-#torrent_inspector li.inspector_torrent_file_list_entry:first-child {
-  margin:0;
-}
 #torrent_inspector li.inspector_torrent_file_list_entry {
   padding: 3px 0 3px 2px;
   display: block;
   margin-left:16px;
 }
 #torrent_inspector li.inspector_torrent_file_list_entry.skip {
-  color: #666;
+  /*color: #666;*/
 }
 #torrent_inspector .inspector_torrent_file_list_entry_name {
   color: #333;
   display: inline-block;
   margin-left: 0px;
 }
-#torrent_inspector li.inspector_torrent_file_list_entry.skip > .inspector_torrent_file_list_entry_name {
-  color: #333;
-}
 #torrent_inspector .inspector_torrent_file_list_entry_progress {
   color: #888;
   margin: 0 5px;
   display: inline-block;
-}
-#torrent_inspector ul.single_file li.inspector_torrent_file_list_entry > .file_wanted_control,
-#torrent_inspector li.inspector_torrent_file_list_entry.complete > .file_wanted_control {
-  cursor: default;
 }
 
 /****

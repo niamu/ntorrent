@@ -5,7 +5,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-function FileRow(torrent, depth, name, indices)
+function FileRow(torrent, name, indices)
 {
 	var fields = {
 		have: 0,
@@ -21,10 +21,10 @@ function FileRow(torrent, depth, name, indices)
 		root: null
 	},
 
-	initialize = function(torrent, depth, name, indices) {
+	initialize = function(torrent, name, indices) {
 		fields.torrent = torrent;
-		fields.indices = indices;
-		createRow(torrent, depth, name);
+		fields.indices = [indices];
+		createRow(torrent, name);
 	},
 
 	refreshWantedHTML = function()
@@ -42,19 +42,15 @@ function FileRow(torrent, depth, name, indices)
 		setTextContent(elements.progress, c);
 	},
 	refreshImpl = function() {
-		var i,
-		    file,
+		var file,
 		    have = 0,
 		    size = 0,
 		    wanted = false;
 
-		// loop through the file_indices that affect this row
-		for (i=0; i<fields.indices.length; ++i) {
-			file = fields.torrent.getFile (fields.indices[i]);
-			have += file.bytesCompleted;
-			size += file.length;
-			wanted |= file.wanted;
-		}
+        file = fields.torrent.getFile(fields.indices[0]);
+        have += file.bytesCompleted;
+		size += file.length;
+		wanted |= file.wanted;
 
 		if ((fields.have != have) || (fields.size != size)) {
 			fields.have = have;
@@ -75,7 +71,7 @@ function FileRow(torrent, depth, name, indices)
 		return (fields.torrent.getFileCount()>1) && !isDone();
 	},
 
-	createRow = function(torrent, depth, name) {
+	createRow = function(torrent, name) {
 		var e, root, box;
 
 		root = document.createElement('li');
@@ -101,19 +97,7 @@ function FileRow(torrent, depth, name, indices)
 
 		e = document.createElement('div');
 		e.className = "inspector_torrent_file_list_entry_name";
-		if (!depth){
-			setTextContent(e, torrent.getName());
-		}else{
-			setTextContent(e, name);
-		}
-		$(e).click(function(){ fireNameClicked(-1); });
-		label.appendChild(e);
-
-		e = document.createElement('span');
-		e.className = "inspector_torrent_file_list_entry_meta";
-		if (!depth){
-			setTextContent(e, torrent.getMeta());
-		}
+		setTextContent(e, name.split("/").pop());
 		$(e).click(function(){ fireNameClicked(-1); });
 		label.appendChild(e);
 
@@ -139,5 +123,5 @@ function FileRow(torrent, depth, name, indices)
 		refreshImpl();
 	};
 
-	initialize(torrent, depth, name, indices);
+	initialize(torrent, name, indices);
 };

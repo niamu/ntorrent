@@ -62,78 +62,19 @@ function Inspector(controller) {
         delete data.file_rows;
     },
 
-    createFileTreeModel = function (tor) {
-        var i, j, n, name, tokens, walk, tree, token, sub,
-            leaves = [ ],
-            tree = { children: { }, file_indices: [ ] };
-
-        n = tor.getFileCount();
-        for (i=0; i<n; ++i) {
-            name = tor.getFile(i).name;
-            tokens = name.split('/');
-            walk = tree;
-            for (j=0; j<tokens.length; ++j) {
-                token = tokens[j];
-                sub = walk.children[token];
-                if (!sub) {
-                    walk.children[token] = sub = {
-                      name: token,
-                      parent: walk,
-                      children: { },
-                      file_indices: [ ],
-                      depth: j
-                    };
-                }
-                walk = sub;
-            }
-            walk.file_index = i;
-            delete walk.children;
-            leaves.push (walk);
-        }
-
-        for (i=0; i<leaves.length; ++i) {
-            walk = leaves[i];
-            j = walk.file_index;
-            do {
-                walk.file_indices.push (j);
-                walk = walk.parent;
-            } while (walk);
-        }
-
-        return tree;
-    },
-
-    addNodeToView = function (tor, parent, sub, i) {
-        var row;
-        row = new FileRow(tor, sub.depth, sub.name, sub.file_indices, i%2);
+    addNodeToView = function (tor, file, indices) {
+        var row, parent;
+        parent = $("#inspector_file_list");
+        row = new FileRow(tor, file.name, indices);
         data.file_rows.push(row);
         parent.append(row.getElement());
         $(row).bind('wantedToggled',onFileWantedToggled);
-    },
-
-    addSubtreeToView = function (tor, parent, sub, i, issub) {
-        var key, div;
-        if (issub){
-            div = $("#inspector_file_list");
-        }
-        if (sub.parent)
-            addNodeToView (tor, div, sub, i++);
-        if (sub.children)
-            for (key in sub.children)
-                i = addSubtreeToView (tor, div, sub.children[key],null,"yes");
-        return i;
     },
                 
     updateFilesPage = function() {
         var i, n, tor, fragment, tree,
             file_list = data.elements.file_list,
             torrents = data.torrents;
-
-        // only show one torrent at a time
-        if (torrents.length !== 1) {
-            clearFileList();
-            return;
-        }
 
         tor = torrents[0];
         n = tor ? tor.getFileCount() : 0;
@@ -144,8 +85,11 @@ function Inspector(controller) {
             data.file_torrent_n = n;
             data.file_rows = [ ];
             fragment = document.createDocumentFragment();
-            tree = createFileTreeModel (tor);
-            addSubtreeToView (tor, fragment, tree, 0);
+            if (tor.fields.files){
+                tor.fields.files.forEach(function(file, index){
+                    addNodeToView(tor, file, index);
+                });
+            }
             file_list.appendChild (fragment);
         } else {
             // ...refresh the already-existing file list
@@ -172,6 +116,18 @@ function Inspector(controller) {
         d.torrents = torrents;
 
         $('#torrent_inspector .fanart').css('background-image', 'url(' + d.torrents[0].getFanart() + ')');
+
+        $('#torrent_inspector .toolbar .title').empty();
+        
+        e = document.createElement('span');
+        e.className = "torrent_name";
+        setTextContent(e, d.torrents[0].getName());
+        $('#torrent_inspector .toolbar .title').append(e);
+
+        e = document.createElement('span');
+        e.className = "torrent_meta";
+        setTextContent(e, d.torrents[0].getMeta());
+        $('#torrent_inspector .toolbar .title').append(e);
 
         // periodically ask for updates to the inspector's torrents
         clearInterval(d.refreshInterval);
