@@ -359,7 +359,7 @@ Torrent.prototype =
 			pass = this.getCollatedName().indexOf(search.toLowerCase()) !== -1;
 
 		// maybe filter by mediaType...
-		if (pass && mediaType && mediaType.length)
+		if (pass && mediaType && mediaType.length && this.getMediaType())
 			pass = this.getMediaType().indexOf(mediaType) !== -1;
 
 		return pass;
