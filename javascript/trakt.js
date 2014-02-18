@@ -146,6 +146,8 @@ Trakt.prototype =
 		else
 			var library = trakt.movies;
 
+		library.reverse();
+
 		for (var i = 0; i < library.length; i++) {
 			var title = library[i].title.replace(/[\:\(\)\']/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
 

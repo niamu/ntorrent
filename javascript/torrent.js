@@ -266,14 +266,18 @@ Torrent.prototype =
 		}
 	},
 	getMediaType: function() {
-		var tracker = this.fields.trackers[0];
-		var announce = tracker.announce;
-		var uri = parseUri(announce);
-		uri.domain = transmission.getDomainName (uri.host);
-		if (trakt.user.showTracker.indexOf(uri.domain) >= 0)
-			return "shows";
-		else if(trakt.user.movieTracker.indexOf(uri.domain) >= 0)
-			return "movies";
+		var mediaType = null;
+		this.fields.trackers.forEach(function (tracker){
+			var announce = tracker.announce;
+			var uri = parseUri(announce);
+			uri.domain = transmission.getDomainName (uri.host);
+			if (trakt.user.showTracker.indexOf(uri.domain) >= 0)
+				mediaType = "shows";
+			else if(trakt.user.movieTracker.indexOf(uri.domain) >= 0)
+				mediaType = "movies";
+		});
+		if (mediaType)
+			return mediaType;
 	},
 	seedRatioLimit: function(controller){
 		switch(this.getSeedRatioMode()) {
@@ -297,9 +301,9 @@ Torrent.prototype =
 	},
 	getCollatedName: function() {
 		var f = this.fields;
-		if (!f.collatedName && f.name && f.trakt)
+		if (f.name && f.trakt){
 			f.collatedName = f.trakt.title.toLowerCase() + " " + f.name.toLowerCase();
-		else
+		}else
 			f.collatedName = f.name.toLowerCase();
 		return f.collatedName || '';
 	},
