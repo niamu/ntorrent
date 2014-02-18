@@ -288,7 +288,8 @@ Transmission.prototype =
 						return tracker;
 					}
 				});
-				tracker = this.getDomainName(parseUri(tracker[0].announce).host);
+				if (tracker[0])
+					tracker = this.getDomainName(parseUri(tracker[0].announce).host);
 			}
 			if ((t = this._torrents[id]))
 			{
