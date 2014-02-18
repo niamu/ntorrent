@@ -32,9 +32,15 @@ body {
   font-weight: 400;
   color: #bbb;
   background: #F6F6F6;
+}
+#top,
+#torrent_container,
+#torrent_inspector {
   -webkit-transition: -webkit-transform 0.25s ease-out;
 }
-body.inspector_showing {
+body.inspector_showing #top,
+body.inspector_showing #torrent_container,
+body.inspector_showing #torrent_inspector {
   -webkit-transform: translateX(-400px);
 }
 body img {
@@ -365,15 +371,10 @@ ul.torrent_list .progress.incomplete.seeding {
   position: fixed;
   top:0px;
   right: -400px;
-  white-space: nowrap;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  -webkit-overflow-scrolling: touch;
   background: #F6F6F6;
   width: 400px;
-  height: 1000%;
-  box-shadow: 0px 80px 20px #888;
+  height: 100%;
+  box-shadow: 0px 0px 20px #000;
   z-index: 1;
 }
 #torrent_inspector #inspector-close {
@@ -399,7 +400,7 @@ ul.torrent_list .progress.incomplete.seeding {
   background: #FFF center center / cover no-repeat;
 }
 #torrent_inspector #inspector_file_list {
-  width: 100%;
+  height: calc(100% - 235px);
   text-align: left;
   display: block;
   cursor: default;
@@ -407,6 +408,11 @@ ul.torrent_list .progress.incomplete.seeding {
   list-style: none;
   list-style-image: none;
   clear: both;
+  white-space: nowrap;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  -webkit-overflow-scrolling: touch;
 }
 #torrent_inspector li.inspector_torrent_file_list_entry {
   padding: 3px 0 3px 2px;
