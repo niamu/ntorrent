@@ -622,7 +622,6 @@ Transmission.prototype =
 	{
 		$('body').addClass('inspector_showing');
 		this.inspector.setTorrents(torrents);
-		$('#torrent_inspector').show();
 	},
 
 	hideInspector: function(torrents)

@@ -65,7 +65,9 @@ Trakt.prototype =
 		urls.push("http://api.trakt.tv/user/library/movies/all.json/" + trakt.user.api + "/" + trakt.user.username + "?callback=?");
 		urls.push("http://api.trakt.tv/user/watchlist/shows.json/" + trakt.user.api + "/" + trakt.user.username + "?callback=?");
 		urls.push("http://api.trakt.tv/user/watchlist/movies.json/" + trakt.user.api + "/" + trakt.user.username + "?callback=?");
-		if (!sessionStorage.getItem("shows") && !sessionStorage.getItem("movies")){
+		trakt.shows = JSON.parse(sessionStorage.getItem("shows"));
+    	trakt.movies = JSON.parse(sessionStorage.getItem("movies"));
+		if (!trakt.shows || !trakt.movies){
 			trakt.data = [];
 			var shows = [],movies = [];
 			$.each(urls, function (i, url) {
@@ -88,9 +90,6 @@ Trakt.prototype =
 					})
 				);
 			});
-		}else{
-    		trakt.shows = JSON.parse(sessionStorage.getItem("shows"));
-    		trakt.movies = JSON.parse(sessionStorage.getItem("movies"));
 		}
 		$.when.apply($, trakt.data).done(function() {
 			transmission = new Transmission(); // Initialise the main Transmission controller
@@ -146,9 +145,7 @@ Trakt.prototype =
 		else
 			var library = trakt.movies;
 
-		library.reverse();
-
-		for (var i = 0; i < library.length; i++) {
+		for (var i = library.length - 1; i >= 0; i--) {
 			var title = library[i].title.replace(/[\:\(\)\']/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
 
 			var re = new RegExp("^"+title);
