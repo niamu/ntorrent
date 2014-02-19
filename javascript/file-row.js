@@ -97,7 +97,7 @@ function FileRow(torrent, name, indices)
 
 		e = document.createElement('div');
 		e.className = "inspector_torrent_file_list_entry_name";
-		setTextContent(e, name.split("/").pop());
+		setTextContent(e, trakt.productionCode(name.split("/").pop()));
 		$(e).click(function(){ fireNameClicked(-1); });
 		label.appendChild(e);
 

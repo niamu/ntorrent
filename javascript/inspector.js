@@ -85,7 +85,7 @@ function Inspector(controller) {
             data.file_torrent_n = n;
             data.file_rows = [ ];
             fragment = document.createDocumentFragment();
-            if (tor.fields.files){
+            if (tor.fields.files && tor.fields.files.length >= 2 && tor.getMediaType() == "shows"){
                 tor.fields.files.forEach(function(file, index){
                     addNodeToView(tor, file, index);
                 });
@@ -109,6 +109,7 @@ function Inspector(controller) {
 
     this.setTorrents = function (torrents) {
         var d = data;
+        inspector = torrents[0].getId();
 
         // update the inspector when a selected torrent's data changes.
         $(d.torrents).unbind('dataChanged.inspector');
@@ -128,6 +129,37 @@ function Inspector(controller) {
         e.className = "torrent_meta";
         setTextContent(e, d.torrents[0].getMeta());
         $('#torrent_inspector .toolbar .title').append(e);
+
+        $('#torrent_inspector .fanart').empty();
+
+        var progress = document.createElement('div');
+        progress.className = 'torrent_progress';
+        torrent_progress = parseInt(d.torrents[0].getPercentDone() * 100) + "%";
+        setTextContent(progress, torrent_progress);
+        var pause_resume = document.createElement('div');
+        var is_stopped = d.torrents[0].isStopped();
+        pause_resume.className = is_stopped ? 'button torrent_toggle torrent_resume' : 'button torrent_toggle torrent_pause';
+        var remove = document.createElement('div');
+        remove.className = 'button torrent_remove';
+        var button = document.createElement('div');
+        button.className = 'torrent_buttons';
+
+        button.appendChild(pause_resume);
+        button.appendChild(remove);
+
+        $('#torrent_inspector .fanart').append(progress);
+        $('#torrent_inspector .fanart').append(button);
+
+        $(".torrent_toggle").bind('click',function(){
+            if (this.className == 'button torrent_toggle torrent_pause'){
+                this.className = 'button torrent_toggle torrent_resume';
+                transmission.stopTorrent(d.torrents[0]);    
+            }else{
+                this.className = 'button torrent_toggle torrent_pause';
+                transmission.startTorrent(d.torrents[0]);
+            }
+        });
+        $(".torrent_remove").bind('click',function(){ transmission.promptToRemoveTorrentsAndData(d.torrents) });
 
         // periodically ask for updates to the inspector's torrents
         clearInterval(d.refreshInterval);

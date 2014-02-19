@@ -131,25 +131,12 @@ TorrentRendererFull.prototype =
 		eta = document.createElement('span');
 		eta.className = 'torrent_progress_eta';
 
-		pause_resume = document.createElement('div');
-		remove = document.createElement('div');
-		remove.className = 'button torrent_remove';
-		inspector = document.createElement('div');
-		inspector.className = 'button torrent_inspector';
-		button = document.createElement('div');
-		button.className = 'torrent_buttons';
-
-		button.appendChild(pause_resume);
-		button.appendChild(remove);
-		button.appendChild(inspector);
-
 		root.appendChild(poster);
 		//root.appendChild(details);
 		description.appendChild(eta);
 		description.appendChild(meta);
 		description.appendChild(progressbar.element);
 		//root.appendChild(peers);
-		poster.appendChild(button);
 		poster.appendChild(description);
 
 		root._meta_container = meta;
@@ -157,8 +144,6 @@ TorrentRendererFull.prototype =
 		root._progress_eta_container = eta;
 		root._progress_details_container = details;
 		root._progressbar = progressbar;
-		root._pause_resume_button = pause_resume;
-		root._toggle_running_button = button;
 
 		return root;
 	},
@@ -236,12 +221,7 @@ TorrentRendererFull.prototype =
 
 		// progress eta
 		e = root._progress_eta_container;
-		setTextContent(e, this.getProgressEta(controller, t));		
-
-		// pause/resume button
-		var is_stopped = t.isStopped();
-		e = root._pause_resume_button;
-		e.className = is_stopped ? 'button torrent_resume' : 'button torrent_pause';
+		setTextContent(e, this.getProgressEta(controller, t));
 	}
 };
 

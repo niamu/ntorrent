@@ -368,26 +368,8 @@ Transmission.prototype =
 		var torrents = [];
 		torrents.push(row.getTorrent());
 
-		// handle the per-row "torrent_resume" button
-		if (ev.target.className === 'button torrent_resume') {
-			this.startTorrent(row.getTorrent());
-			return;
-		}
-
-		// handle the per-row "torrent_pause" button
-		if (ev.target.className === 'button torrent_pause') {
-			this.stopTorrent(row.getTorrent());
-			return;
-		}
-
-		// handle the per-row "torrent_remove" button
-		if (ev.target.className === 'button torrent_remove') {
-			this.promptToRemoveTorrentsAndData(torrents);
-			return;
-		}
-
 		// handle the per-row "torrent_inspector" button
-		if (ev.target.className === 'button torrent_inspector') {
+		if (ev.target.className === 'poster') {
 			this.showInspector(torrents);
 			return;
 		}
@@ -457,19 +439,10 @@ Transmission.prototype =
 
 	promptToRemoveTorrentsAndData:function(torrents)
 	{
-		if (torrents.length === 1)
-		{
-			var torrent = torrents[0],
-			    header = 'Remove ' + torrent.getName() + ' and delete data?',
-			    message = 'All data downloaded for this torrent will be deleted. Are you sure you want to remove it?';
-			dialog.confirm(header, message, 'Remove', 'transmission.removeTorrentsAndData', torrents);
-		}
-		else
-		{
-			var header = 'Remove ' + torrents.length + ' transfers and delete data?',
-			    message = 'All data downloaded for these torrents will be deleted. Are you sure you want to remove them?';
-			dialog.confirm(header, message, 'Remove', 'transmission.removeTorrentsAndData', torrents);
-		}
+		var torrent = torrents[0],
+		    header = 'Remove ' + torrent.getName() + ' and delete data?',
+		    message = 'All data downloaded for this torrent will be deleted. Are you sure you want to remove it?';
+		dialog.confirm(header, message, 'Remove', 'transmission.removeTorrentsAndData', torrents);
 	},
 
 	removeTorrents: function(torrents) {
@@ -479,6 +452,8 @@ Transmission.prototype =
 
 	removeTorrentsAndData: function(torrents) {
 		this.remote.removeTorrentsAndData(torrents);
+		if (inspector && torrents[0].getId() == inspector)
+			$('body').removeClass('inspector_showing');
 	},
 
 	reannounceSelectedTorrents: function() {
@@ -621,8 +596,8 @@ Transmission.prototype =
 
 	showInspector: function(torrents)
 	{
-		$('body').addClass('inspector_showing');
 		this.inspector.setTorrents(torrents);
+		$('body').addClass('inspector_showing');
 	},
 
 	hideInspector: function(torrents)
