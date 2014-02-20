@@ -38,7 +38,7 @@ function FileRow(torrent, name, indices)
 	refreshProgressHTML = function()
 	{
 		var pct = 100 * (fields.size ? (fields.have / fields.size) : 1.0),
-		    c = [ Transmission.fmt.percentString(pct), '%' ].join('');
+		    c = [ parseInt(Transmission.fmt.percentString(pct)), '%' ].join('');
 		setTextContent(elements.progress, c);
 	},
 	refreshImpl = function() {
@@ -72,34 +72,42 @@ function FileRow(torrent, name, indices)
 	},
 
 	createRow = function(torrent, name) {
-		var e, root, box;
+		var e, root, box,
+		productionCode = trakt.productionCode(name.split("/").pop());
 
 		root = document.createElement('li');
-		root.className = 'inspector_torrent_file_list_entry';
+		root.className = 'torrent_file';
+		$(root).css('background-image', 'url(' + torrent.getEpisodeImage(productionCode) + ')');
 		elements.root = root;
-
-		var label = document.createElement('label');
-		root.appendChild(label);
 
 		e = document.createElement('input');
 		e.type = 'checkbox';
+		e.id = productionCode;
 		e.className = "file_wanted_control";
 		e.title = 'Download file';
 		$(e).change(function(ev){ fireWantedChanged( $(ev.currentTarget).prop('checked')); });
 		root.checkbox = e;
-		label.appendChild(e);
+		root.appendChild(e);
+
+		var label = document.createElement('label');
+		label.htmlFor = productionCode;
+		root.appendChild(label);
+
+		container = document.createElement('div');
+		container.className = "torrent_file_container";
+		root.appendChild(container);
 
 		e = document.createElement('div');
-		e.className = "inspector_torrent_file_list_entry_progress";
-		label.appendChild(e);
+		e.className = "torrent_file_progress";
+		container.appendChild(e);
 		$(e).click(function(){ fireNameClicked(-1); });
 		elements.progress = e;
 
 		e = document.createElement('div');
-		e.className = "inspector_torrent_file_list_entry_name";
-		setTextContent(e, trakt.productionCode(name.split("/").pop()));
+		e.className = "torrent_file_name";
+		setTextContent(e, productionCode.substr(-2));
 		$(e).click(function(){ fireNameClicked(-1); });
-		label.appendChild(e);
+		container.appendChild(e);
 
 		refreshImpl();
 		return root;

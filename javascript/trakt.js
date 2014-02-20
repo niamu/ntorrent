@@ -165,20 +165,6 @@ Trakt.prototype =
 		torrent.refresh(data);
 	},
 
-	injectTraktEpisodeData: function(data) {
-		episodeData = trakt.getEpisode(data);
-
-		trakt.rawEpisode.done(function(result) {
-			if (episodeData.episode < 10){
-				episodeData.episode = "0" + episodeData.episode;
-			}
-			torrent.setField(data,"episode_name",result.episode.title + " " + episodeData.season + "x" + episodeData.episode);
-			torrent.setField(data,"series_name",result.show.title);
-			torrent.setField(data,"background",result.show.images.poster.substring(0,result.show.images.poster.length - 4) + "-300.jpg");
-			torrent.refresh(data);
-		});
-	},
-
 	matchTorrent: function(torrentName,mediaType)
 	{
 		var clean_name = torrentName.replace(/[\._\;]/g," ").replace(/[\:\(\)\']/g,"").toLowerCase();
@@ -194,44 +180,6 @@ Trakt.prototype =
 			var re = new RegExp("^"+title);
 			if (clean_name.match(re)){
 				return library[i];
-			}
-		}
-	},
-
-	getEpisode: function(torrent)
-	{
-		var clean_name = torrent.fields.name;
-
-		for (var i = 0; i < this.library.length; i++) {
-			var show = this.library[i].title.replace(/[\:\(\)]/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
-
-			var re = new RegExp(show);
-			if (clean_name.match(re)){
-				var title = show.toLowerCase().replace(/[ ]/g,"-");
-				try{
-					var production_code = clean_name.match(/[0-9]{2}[eE|xX][0-9]{2}/)[0];
-				}
-				catch(err){
-					var production_code = clean_name.match(/[sS][0-9]{2}/)[0];
-				}
-				var season = parseInt(production_code.match(/[0-9]*/)[0], 10).toString();
-				try{
-					var episode = parseInt(production_code.match(/[eE|xX][0-9]*/)[0].substring(1), 10).toString();
-				}
-				catch(err){
-					var episode = null;
-				}
-
-				var summary = [];
-
-				var query = "http://api.trakt.tv/show/episode/summary.json/" + trakt.user.api + "/" + title + "/" + season + "/" + episode + "?callback=?";
-				this.rawEpisode = $.getJSON(query)
-
-				return {
-					title: this.library[i].title,
-					season: season,
-					episode: episode
-				};
 			}
 		}
 	}

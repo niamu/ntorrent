@@ -541,11 +541,11 @@ Transmission.prototype =
 			d += row.getDownloadSpeed();
 		}
 
-		$('#speed-up-container').toggleClass('active', u>0 );
-		$('#speed-up-label').text( fmt.speedBps( u ) );
+		$('#main .speed-up-container').toggleClass('active', u>0 );
+		$('#main .speed-up-label').text( fmt.speedBps( u ) );
 
-		$('#speed-dn-container').toggleClass('active', d>0 );
-		$('#speed-dn-label').text( fmt.speedBps( d ) );
+		$('#main .speed-dn-container').toggleClass('active', d>0 );
+		$('#main .speed-dn-label').text( fmt.speedBps( d ) );
 
 		// visible torrents
 		$('#filter-count').text( fmt.countString('Torrent','Torrents',this._rows.length ) );
@@ -874,11 +874,11 @@ Transmission.prototype =
 
 		s = stats["cumulative-stats"];
 		ratio = Math.ratio(s.uploadedBytes,s.downloadedBytes);
-		$('#stats-total-count').html(s.sessionCount + " times");
-		$('#stats-total-uploaded').html(fmt.size(s.uploadedBytes) + " Total");
-		$('#stats-total-downloaded').html(fmt.size(s.downloadedBytes) + " Total");
-		$('#stats-total-ratio').html(fmt.ratioString(ratio));
-		$('#stats-total-duration').html(fmt.timeInterval(s.secondsActive));
-		$('#stats-torrent-count').html(stats.torrentCount);
+		$('#main .stats-total-count').html(s.sessionCount + " times");
+		$('#main .stats-total-uploaded').html(fmt.size(s.uploadedBytes) + " Total");
+		$('#main .stats-total-downloaded').html(fmt.size(s.downloadedBytes) + " Total");
+		$('#main .stats-total-ratio').html(fmt.ratioString(ratio));
+		$('#main .stats-total-duration').html(fmt.timeInterval(s.secondsActive));
+		$('#main .stats-torrent-count').html(stats.torrentCount);
 	}
 };

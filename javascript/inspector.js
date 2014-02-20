@@ -36,6 +36,12 @@ function Inspector(controller) {
 
             data.controller.updateTorrents(ids, fields);
         }
+        $("#torrent_inspector .speed-up-label").text(
+            transmission.inspector.formatUL(transmission.getAllTorrents()[inspector-1])
+        );
+        $("#torrent_inspector .speed-dn-label").text(
+            transmission.inspector.formatDL(transmission.getAllTorrents()[inspector-1])
+        );
     },
 
     updateInspector = function () {
@@ -107,6 +113,16 @@ function Inspector(controller) {
     *****  PUBLIC FUNCTIONS
     ****/
 
+    this.formatUL = function(t)
+    {
+        return Transmission.fmt.speedBps(t.getUploadSpeed());
+    };
+
+    this.formatDL = function(t)
+    {
+        return Transmission.fmt.speedBps(t.getDownloadSpeed());
+    };
+
     this.setTorrents = function (torrents) {
         var d = data;
         inspector = torrents[0].getId();
@@ -160,6 +176,8 @@ function Inspector(controller) {
             }
         });
         $(".torrent_remove").bind('click',function(){ transmission.promptToRemoveTorrentsAndData(d.torrents) });
+
+        
 
         // periodically ask for updates to the inspector's torrents
         clearInterval(d.refreshInterval);
