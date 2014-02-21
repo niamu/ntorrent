@@ -207,8 +207,8 @@ TorrentRendererFull.prototype =
 
 		// peer details
 		var has_error = t.getError() !== Torrent._ErrNone;
-		var e = root._peer_details_container;
-		$(e).toggleClass('error',has_error);
+		var e = root._progressbar;
+		$(e.element).toggleClass('error',has_error);
 
 		// progress details
 		e = root._progress_details_container;

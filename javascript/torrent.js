@@ -215,7 +215,6 @@ Torrent.prototype =
     getLeftUntilDone: function() { return this.fields.leftUntilDone; },
     getMetadataPercentComplete: function() { return this.fields.metadataPercentComplete; },
     getName: function() { if (this.fields.trakt) return this.fields.trakt.title;else return this.fields.name; },
-    getMeta: function() { return this.fields.production_code || this.fields.trakt.year; },
     getPoster: function() { if (this.fields.trakt) return this.fields.trakt.images.poster.substring(0,this.fields.trakt.images.poster.length - 4) + "-300.jpg" || ''; },
     getFanart: function() { if (this.fields.trakt) return this.fields.trakt.images.fanart.substring(0,this.fields.trakt.images.fanart.length - 4) + "-940.jpg" || ''; },
     getPeers: function() { return this.fields.peers; },
@@ -264,6 +263,12 @@ Torrent.prototype =
             case undefined:                     return 'Unknown';
             default:                            return 'Error';
         }
+    },
+    getMeta: function() {
+        if (this.fields.trakt)
+            return this.fields.production_code || this.fields.trakt.year;
+        else
+            return '';
     },
     getMediaType: function() {
         var mediaType = null;

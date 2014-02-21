@@ -76,7 +76,6 @@ Dialog.prototype = {
 		setTextContent(this._message[0], dialog_message);
 		setTextContent(this._cancel_button[0], cancel_button_label || 'Cancel');
 		setTextContent(this._confirm_button[0], confirm_button_label);
-		this._confirm_button.show();
 		this._callback_function = callback_function;
 		this._callback_data = callback_data;
 		this._container.show();

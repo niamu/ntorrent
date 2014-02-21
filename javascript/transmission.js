@@ -42,9 +42,6 @@ Transmission.prototype =
 		$('#toolbar-start-all').click($.proxy(this.startAllClicked,this));
 		$('#toolbar-open').click($.proxy(this.openTorrentClicked,this));
 
-		$('#upload_confirm_button').click($.proxy(this.confirmUploadClicked,this));
-		$('#upload_cancel_button').click($.proxy(this.hideUploadDialog,this));
-
 		$('#turtle-button').click($.proxy(this.toggleTurtleClicked,this));
 
 		$('#inspector-close').click($.proxy(this.hideInspector,this));
@@ -52,7 +49,8 @@ Transmission.prototype =
 		// tell jQuery to copy the dataTransfer property from events over if it exists
 		jQuery.event.props.push("dataTransfer");
 
-		$('#torrent_upload_form').submit(function() { $('#upload_confirm_button').click(); return false; });
+		$('#torrent_upload_form').submit($.proxy(this.confirmUploadClicked,this));
+		$('#torrent_upload_file').change(function(){$('#torrent_upload_form').submit()});
 
 		e = $('#filter-mode');
 		$('input:radio[name=filter-mode][id=filter-' + this[Prefs._FilterMode] + ']').attr('checked', true);
@@ -92,6 +90,10 @@ Transmission.prototype =
 			Prefs.getClutchPrefs(o);
 			this.updateGuiFromSession(o);
 			this.sessionProperties = o;
+			if (this.remote._error){
+				this.remote._error = "";
+				dialog.hideDialog();
+			}
 		}, this, async);
 	},
 
@@ -174,8 +176,11 @@ Transmission.prototype =
 	},
 
 	openTorrentClicked: function(ev) {
-		$('body').addClass('open_showing');
-		this.uploadTorrentFile();
+		$('input#torrent_upload_file').attr('value', '');
+		$('input#torrent_upload_url').attr('value', '');
+		$('input#torrent_auto_start').attr('checked', true);
+		$('#upload_container').show();
+		$('#torrent_upload_url').focus();
 		this.updateButtonStates();
 	},
 
@@ -218,19 +223,14 @@ Transmission.prototype =
 	},
 
 	hideUploadDialog: function() {
-		$('body.open_showing').removeClass('open_showing');
 		$('#upload_container').hide();
 		this.updateButtonStates();
 	},
 
 	confirmUploadClicked: function() {
-		this.uploadTorrentFile(true);
+		this.uploadTorrentFile();
 		this.hideUploadDialog();
-	},
-
-	hideMoveDialog: function() {
-		$('#move_container').hide();
-		this.updateButtonStates();
+		return false;
 	},
 
 	// turn the periodic ajax session refresh on & off
@@ -395,16 +395,9 @@ Transmission.prototype =
 	 */
 	uploadTorrentFile: function(confirmed)
 	{
-		// Display the upload dialog
-		if (! confirmed) {
-			$('input#torrent_upload_file').attr('value', '');
-			$('input#torrent_upload_url').attr('value', '');
-			$('input#torrent_auto_start').attr('checked', true);
-			$('#upload_container').show();
-			$('#torrent_upload_url').focus();
-
-		// Submit the upload form
-		} else {
+		if (($('input#torrent_upload_file').val() != '' || $('input#torrent_upload_url').val() != '') &&
+			$('#torrent_upload_form').is(":visible")){
+			// Submit the upload form
 			var args = {};
 			var remote = this.remote;
 			var paused = false;
@@ -416,6 +409,7 @@ Transmission.prototype =
 				args.data = { 'X-Transmission-Session-Id' : remote._token };
 				args.dataType = 'xml';
 				args.iframe = true;
+				console.log($('input#torrent_upload_file').val());
 				$('#torrent_upload_form').ajaxSubmit(args);
 			}
 		}
@@ -440,8 +434,8 @@ Transmission.prototype =
 	promptToRemoveTorrentsAndData:function(torrents)
 	{
 		var torrent = torrents[0],
-		    header = 'Remove ' + torrent.getName() + ' and delete data?',
-		    message = 'All data downloaded for this torrent will be deleted. Are you sure you want to remove it?';
+		    header = 'Delete',
+		    message = 'Are you sure?';
 		dialog.confirm(header, message, 'Remove', 'transmission.removeTorrentsAndData', torrents);
 	},
 

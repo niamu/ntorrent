@@ -55,7 +55,7 @@ h2 {
   margin:10px 0;
 }
 
-input[type="text"],input[type="password"] {
+input[type="text"],input[type="password"],input[type="url"] {
   width:100%;
   padding:15px 10px;
   border:none;
@@ -79,6 +79,35 @@ input[type="text"],input[type="password"] {
   margin:5px 0;
 }
 
+button {
+  position: relative;
+  border: none;
+  background: #DDD;
+  text-indent: -9999px;
+  border-radius: 3px;
+  width: 62px;
+  height: 62px;
+}
+button:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 62px;
+  height: 62px;
+  border-radius: 3px;
+}
+button:hover {
+  background: #3CAFFF;
+}
+button#upload_cancel_button:after {
+  background: url("images/alt-delete.png") 50% 50% / 32px 32px no-repeat;
+}
+button#upload_cancel_button:hover {
+  background: #FF583C;
+}
+
 .button, .torrent_file label {
   position: relative;
   cursor: pointer;
@@ -90,7 +119,7 @@ input[type="text"],input[type="password"] {
   background: #222;
 }
 .button:hover, .torrent_file label:hover {
-  background: #FF583C;
+  background: #3CAFFF;
 }
 .button:after, .torrent_file label:after {
   content:"";
@@ -129,9 +158,7 @@ input[type="text"],input[type="password"] {
 .toolbar #toolbar-pause-all:after { background-image: url("images/alt-pause.png"); }
 .toolbar #turtle-button:after { background-image: url("images/alt-clock.png"); }
 .toolbar #turtle-button.selected:after { opacity: 1; }
-.toolbar #turtle-button.selected {
-  background: #3CAFFF;
-}
+.toolbar #turtle-button.selected { background: #FF583C; }
 #filter-mode, #filter-tracker {
   position: relative;
   float: left;
@@ -169,7 +196,7 @@ input[type="text"],input[type="password"] {
   line-height: 34px;
   color: rgba(255,255,255,0.9);
 }
-input#torrent_search {
+input#torrent_search, input[type="url"] {
   position: relative;
   float: left;
   height: 35px;
@@ -182,7 +209,7 @@ input#torrent_search {
   color: #FFF;
   background: transparent url("images/alt-search-2.png") 95% 50% / 16px 16px no-repeat;
 }
-input#torrent_search:focus {
+input:focus {
   outline-width: 0;
 }
 
@@ -347,31 +374,34 @@ ul#torrent_list .progress {
   top: 0px;
   left: 0px;
 }
-ul#torrent_list .progress.complete.paused {
+.error .progress {
+  background: #FF583C !important;
+}
+.progress.complete.paused {
   background: rgba(131, 131, 131, 1);
 }
-ul#torrent_list .progress.complete.magnet {
+.progress.complete.magnet {
   background: rgba(60, 175, 255, 1);
 }
-ul#torrent_list .progress.complete.leeching {
+.progress.complete.leeching {
   background: rgba(60, 175, 255, 1);
 }
-ul#torrent_list .progress.complete.seeding {
+.progress.complete.seeding {
   background: rgba(60, 255, 139, 1);
 }
-ul#torrent_list .progress.incomplete {
+.progress.incomplete {
   width: 100%;
 }
-ul#torrent_list .progress.incomplete.paused {
+.progress.incomplete.paused {
   background: rgba(131, 131, 131, 0.7);
 }
-ul#torrent_list .progress.incomplete.magnet {
+.progress.incomplete.magnet {
   background: rgba(60, 175, 255, 0.7);
 }
-ul#torrent_list .progress.incomplete.leeching {
+.progress.incomplete.leeching {
   background: rgba(60, 175, 255, 0.7);
 }
-ul#torrent_list .progress.incomplete.seeding {
+.progress.incomplete.seeding {
   background: rgba(60, 255, 139, 0.7);
 }
 
@@ -470,6 +500,7 @@ ul#torrent_list .progress.incomplete.seeding {
 ****/
 .dialog_container {
   position: absolute;
+  display: none;
   top: 0;
   left: 0px;
   width: 100%;
@@ -477,81 +508,78 @@ ul#torrent_list .progress.incomplete.seeding {
   background: #FFF;
 }
 
-.dialog_container .dialog_window {
-  position: relative;
-  margin: 0 auto;
-  width: 420px;
+#dialog_container {
+  text-align: center;
 }
 
-.dialog_container .dialog_logo {
-  width: 64px;
-  height: 64px;
-  margin: 20px 20px 0 20px;
-  float: left;
-  background: transparent url("images/logo.png") top left no-repeat;
+.dialog_container .dialog_window {
+  position: relative;
+  margin: 25px auto 0;
+  width: 300px;
 }
 
 .dialog_container .dialog_window h2.dialog_heading {
   display: block;
-  float: left;
-  width: 305px;
-  font-size: 1.2em;
-  color: black;
-  margin-top: 20px;
+  font-size: 36px;
+  line-height: 1em;
+  margin: 0px;
+  padding-top: 25px;
 }
 
-.dialog_container .dialog_window .dialog_message {
-  float: left;
-  padding-left: 3px;
-  margin-left: -3px;
-  width: 305px;
+#upload_container .dialog_window .dialog_message input[type="url"] {
+  float: none;
+  width: 100%;
+  margin: 10px 0 0;
+  border: 2px solid #DDD;
+  color: #888;
+}
+#upload_container .dialog_window .dialog_message input[type="url"]::-webkit-input-placeholder {
+  text-align: center;
+}
+#torrent_upload_form input[type="submit"] {
+  display: none;
+}
+input#torrent_upload_file {
+  position: absolute;
+  top:0px;
+  left:0px;
+  color: transparent;
+  height:62px;
+  width:186px;
   overflow: hidden;
+  cursor: pointer;
 }
-
-.dialog_container .dialog_window a {
+input#torrent_upload_file:after {
+  content: "";
+  position: absolute;
+  top:0px;
   display: block;
-  float: right;
-  margin: 10px 20px 10px -8px;
-  padding: 5px;
-  background-color: #EEE;
-  border: 1px solid #787878;
-  width: 50px;
-  height: 15px;
-  text-decoration: none;
-  cursor: default;
+  background: #ddd url("images/alt-arrow-up.png") 15px 50% / 32px 32px no-repeat;
+  border-radius:3px;
+  height:62px;
+  width: 186px;
 }
-
-.dialog_container .dialog_window a:hover,
-.dialog_container .dialog_window a:active {
-  background: #c0c8d6;
+label:hover input#torrent_upload_file:after {
+  background-color:#3CAFFF;
 }
-
-#upload_container .dialog_window .dialog_message label {
-  margin-top: 15px;
+label[for="torrent_upload_file"] {
+  position: relative;
   display: block;
+  margin:0 auto;
+  width: 186px;
+  height: 64px;
+  line-height: 62px;
+  text-align: center;
+  padding-left: 30px;
+  text-transform: uppercase;
+  color:#FFF;
+  font-weight: bold;
+  cursor: pointer;
+  box-sizing: border-box;
 }
-
-#upload_container .dialog_window .dialog_message input {
-  width: 249px;
-  margin: 3px 0 0 0;
-  display: block;
+label[for="torrent_upload_file"] span {
+  position: relative;
 }
-
-#upload_container .dialog_window .dialog_message input[type=text] {
-  width: 245px;
-  padding: 2px;
-}
-
-#upload_container .dialog_window .dialog_message input[type=checkbox] {
-  margin: 15px 3px 0 0;
-  display: inline;
-  width: auto;
-}
-
-#upload_container .dialog_window .dialog_message #auto_start_label {
-  display: inline;
-}
-
 .dialog_container .dialog_window form {
   margin: 0;
   padding: 0px;

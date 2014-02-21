@@ -27,6 +27,8 @@ function Inspector(controller) {
         var fields,
             ids = $.map(data.torrents.slice(0), function (t) {return t.getId();});
 
+        if (!transmission._torrents[ids[0]])
+            return;
         if (ids && ids.length)
         {
             fields = ['id'].concat(Torrent.Fields.StatsExtra);
@@ -37,10 +39,10 @@ function Inspector(controller) {
             data.controller.updateTorrents(ids, fields);
         }
         $("#torrent_inspector .speed-up-label").text(
-            transmission.inspector.formatUL(transmission.getAllTorrents()[inspector-1])
+            transmission.inspector.formatUL(transmission._torrents[ids[0]])
         );
         $("#torrent_inspector .speed-dn-label").text(
-            transmission.inspector.formatDL(transmission.getAllTorrents()[inspector-1])
+            transmission.inspector.formatDL(transmission._torrents[ids[0]])
         );
     },
 
@@ -175,7 +177,7 @@ function Inspector(controller) {
                 transmission.startTorrent(d.torrents[0]);
             }
         });
-        $(".torrent_remove").bind('click',function(){ transmission.promptToRemoveTorrentsAndData(d.torrents) });
+        $(".torrent_remove").bind('click',function(){ transmission.removeTorrentsAndData(d.torrents) });
 
         
 
