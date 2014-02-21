@@ -193,9 +193,10 @@ Prefs.getValue = function(key, fallback)
 	else if (val === 'true') val = true;
 	else if (val === 'false') val = false;
 
-	if (key == 'sort_method'){
+	if (key == 'sort_method')
 		val = 'age';
-	}
+	else if (key == 'sort_direction')
+		val = 'ascending';
 
 	return val;
 };
