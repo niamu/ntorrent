@@ -142,14 +142,18 @@ Trakt.prototype =
 			else
 				return n;
 		}
-		var productionCode = name.replace(/[12][0-9]{3}\./g,"").match(/[sS]?[0-9]*[eE|xX]?[0-9]{2}/)[0].replace(/[^0123456789]/g,"");
+		if (name.match(/[sS]?[0-9]*[eE|xX]?[0-9]{2}/)){
+			var productionCode = name.replace(/[12][0-9]{3}\./g,"").match(/[sS]?[0-9]*[eE|xX]?[0-9]{2}/)[0].replace(/[^0123456789]/g,"");
 
-		if (productionCode.length > 2)
-			var episode = "E" + productionCode.substr(-2);
-		else
-			var episode = "";
-		var season = "S" + pad(productionCode.replace(episode.replace(/[^0123456789]/g,""),""));
-		return season + episode;
+			if (productionCode.length > 2)
+				var episode = "E" + productionCode.substr(-2);
+			else
+				var episode = "";
+			var season = "S" + pad(productionCode.replace(episode.replace(/[^0123456789]/g,""),""));
+			return season + episode;
+		}else{
+			return "SXXEXX";
+		}
 	},
 
 	injectTorrent: function(torrent)
