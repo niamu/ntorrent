@@ -364,8 +364,10 @@ ul#torrent_list li.torrent .torrent_progress_eta {
   font-weight: lighter;
 }
 ul#torrent_list .progress_container {
-  height: 2px;
-  margin-top:5px;
+  height: 5px;
+  margin: 5px;
+  border-radius: 1px;
+  overflow: hidden;
   position: relative;
 }
 ul#torrent_list .progress {
