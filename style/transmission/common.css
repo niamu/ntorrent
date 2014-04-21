@@ -152,6 +152,7 @@ button#upload_cancel_button:hover {
   background-color: #111;
   text-transform: uppercase;
 }
+.toolbar #toolbar-menu:after { background-image: url("images/alt-menu.png"); }
 .toolbar #toolbar-open:after { background-image: url("images/alt-plus.png"); }
 .toolbar #inspector-close:after { background-image: url("images/alt-delete.png"); }
 .toolbar #toolbar-start-all:after { background-image: url("images/alt-play.png"); }
@@ -629,5 +630,44 @@ label[for="torrent_upload_file"] span {
 @media all and (max-width: 500px) {
   #torrent_search {
     display: none;
+  }
+}
+@media all and (max-width: 320px) {
+  body.inspector_showing #top,
+  body.inspector_showing #torrent_container,
+  body.inspector_showing #torrent_inspector {
+    -webkit-transform: translateX(-320px);
+  }
+  #main .stats {
+    width: 300px;
+    margin: 20px auto;
+  }
+  .stats .speed-up-container, .stats .speed-dn-container, .stats .torrent-count-container {
+    width: 220px;
+  }
+  input#torrent_search {
+    display: block;
+    width: 165px;
+  }
+  #torrent_container {
+    padding-top: 70px;
+  }
+  #torrent_inspector {
+    width: 320px;
+    right: -320px;
+  }
+  #torrent_inspector .toolbar .title {
+    max-width: 220px;
+  }
+  #torrent_inspector .stats {
+    width: 300px;
+  }
+  #torrent_inspector .stats .speed-up-container, #torrent_inspector .stats .speed-dn-container {
+    padding-left: 40px;
+    width: 145px;
+  }
+  #torrent_inspector li.torrent_file {
+    width: 145px;
+    height: 82px;
   }
 }
