@@ -185,11 +185,14 @@ TorrentRendererFull.prototype =
 	render: function(controller, t, root)
 	{
 		// name
-		if (t.fields.trakt)
+		if (t.fields.trakt){
 			setTextContent(root._meta_container, t.getMeta());
-
-		var e = root.getElementsByClassName("poster")[0];
-		$(e).css('background-image', 'url(' + t.getPoster() + ')');
+			
+			var e = $(root).find(".poster");
+			e.css('background-image', 'url(' + t.getPoster() + ')');
+		}else{
+			setTextContent(root._meta_container, t.getName());
+		}
 
 		//trackers
 		var trackers = t.getTrackers();

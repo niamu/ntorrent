@@ -352,9 +352,14 @@ ul#torrent_list li.torrent .torrent_description {
   padding-top: 10%;
 }
 ul#torrent_list li.torrent .torrent_description span.torrent_meta {
-  margin-right: 10px;
+  display: block;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 5px;
   font-size: 18px;
   font-weight: lighter;
+  box-sizing: border-box;
 }
 ul#torrent_list li.torrent .torrent_progress_eta {
   height: 16px;

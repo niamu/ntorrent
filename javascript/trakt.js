@@ -172,6 +172,7 @@ Trakt.prototype =
 	matchTorrent: function(torrentName,mediaType)
 	{
 		var clean_name = torrentName.replace(/[\._\;]/g," ").replace(/[\:\(\)\']/g,"").toLowerCase();
+		clean_name = clean_name.replace("space time odyssey", "spacetime odyssey");
 
 		if (mediaType == "shows")
 			var library = trakt.shows;
@@ -179,7 +180,7 @@ Trakt.prototype =
 			var library = trakt.movies;
 
 		for (var i = library.length - 1; i >= 0; i--) {
-			var title = library[i].title.replace(/[\:\(\)\'\.]/g,"").replace(/[\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
+			var title = library[i].title.replace(/[\:\(\)\']/g,"").replace(/[\._\;]/g," ").replace(/[\+]/g,"plus").toLowerCase();
 
 			var re = new RegExp("^"+title);
 			if (clean_name.match(re)){
