@@ -311,10 +311,8 @@ ul#torrent_list li.torrent {
   border-radius: 3px;
   overflow: hidden;
 }
-ul#torrent_list li.torrent:hover .poster {
-  box-shadow: inset 0 0 2px 2px #3CAFFF;
-}
 ul#torrent_list li.torrent .poster {
+  position: relative;
   height: 222px;
   background: #111 50% 50% / cover no-repeat;
 }
@@ -350,28 +348,27 @@ ul#torrent_list li.torrent .torrent_description {
   white-space: nowrap;
   color: #DDD;
   background: linear-gradient(transparent, rgba(0,0,0,0.8));
-  padding-top: 10%;
+  padding: 20px 5px 5px;
+  box-sizing: border-box;
 }
 ul#torrent_list li.torrent .torrent_description span.torrent_meta {
   display: block;
-  overflow-x: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 0 5px;
   font-size: 18px;
   font-weight: lighter;
   box-sizing: border-box;
 }
 ul#torrent_list li.torrent .torrent_progress_eta {
   height: 16px;
-  margin-right: 10px;
   display: block;
   font-size:10px;
   font-weight: lighter;
 }
 ul#torrent_list .progress_container {
   height: 5px;
-  margin: 5px;
+  margin-top: 5px;
   border-radius: 1px;
   overflow: hidden;
   position: relative;
