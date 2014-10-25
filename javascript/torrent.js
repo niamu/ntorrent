@@ -271,18 +271,13 @@ Torrent.prototype =
             return '';
     },
     getMediaType: function() {
-        var mediaType = null;
-        this.fields.trackers.forEach(function (tracker){
-            var announce = tracker.announce;
-            var uri = parseUri(announce);
-            uri.domain = transmission.getDomainName (uri.host);
-            if (trakt.user.showTracker.indexOf(uri.domain) >= 0)
-                mediaType = "shows";
-            else if(trakt.user.movieTracker.indexOf(uri.domain) >= 0)
-                mediaType = "movies";
-        });
-        if (mediaType)
-            return mediaType;
+        var mediaType = "movies";
+        var name = this.fields.name;
+
+        if (name.match(/[sS][0-9]{2}/)){
+            mediaType = "shows";
+        }
+        return mediaType;
     },
     getEpisodeImage: function(productionCode) {
         var image = this.getFanart();
