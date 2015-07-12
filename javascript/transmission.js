@@ -284,7 +284,8 @@ Transmission.prototype =
 			if (o.trackers){
 				tracker = o.trackers.filter(function (tracker){
 					var test = transmission.getDomainName(parseUri(tracker.announce).host);
-					if (trakt.user.showTracker.indexOf(test) != -1 || trakt.user.movieTracker.indexOf(test) != -1){
+					if (trakt.config.trackers.shows.indexOf(test) != -1 ||
+						trakt.config.trackers.movies.indexOf(test) != -1){
 						return tracker;
 					}
 				});
@@ -409,7 +410,6 @@ Transmission.prototype =
 				args.data = { 'X-Transmission-Session-Id' : remote._token };
 				args.dataType = 'xml';
 				args.iframe = true;
-				console.log($('input#torrent_upload_file').val());
 				$('#torrent_upload_form').ajaxSubmit(args);
 			}
 		}

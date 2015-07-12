@@ -62,23 +62,6 @@ input[type="text"],input[type="password"],input[type="url"] {
   box-sizing: border-box;
 }
 
-#login {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  color:#A3A5B5;
-  background: #FFF;
-}
-
-#login form {
-  margin: 300px auto 0;
-  width: 500px;
-}
-
-#login form input {
-  margin:5px 0;
-}
-
 button {
   position: relative;
   border: none;
@@ -207,8 +190,15 @@ input#torrent_search, input[type="url"] {
   font-size: 14px;
   border-radius: 18px;
   border:2px solid #333;
-  color: #FFF;
   background: transparent url("images/alt-search-2.png") 95% 50% / 16px 16px no-repeat;
+  -webkit-transition: border 0.25s ease-in-out;
+}
+input#torrent_search {
+	color: #30AFE1;
+}
+input#torrent_search:hover,
+input#torrent_search:focus {
+	border:2px solid #FFF;
 }
 input:focus {
   outline-width: 0;

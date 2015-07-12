@@ -215,8 +215,8 @@ Torrent.prototype =
     getLeftUntilDone: function() { return this.fields.leftUntilDone; },
     getMetadataPercentComplete: function() { return this.fields.metadataPercentComplete; },
     getName: function() { if (this.fields.trakt) return this.fields.trakt.title;else return this.fields.name; },
-    getPoster: function() { if (this.fields.trakt) return this.fields.trakt.images.poster.substring(0,this.fields.trakt.images.poster.length - 4) + "-300.jpg" || '';else return ''; },
-    getFanart: function() { if (this.fields.trakt) return this.fields.trakt.images.fanart.substring(0,this.fields.trakt.images.fanart.length - 4) + "-940.jpg" || '';else return ''; },
+    getPoster: function() { if (this.fields.trakt) return this.fields.trakt.images.poster.thumb || '';else return ''; },
+    getFanart: function() { if (this.fields.trakt) return this.fields.trakt.images.fanart.thumb || '';else return ''; },
     getPeers: function() { return this.fields.peers; },
     getPeersConnected: function() { return this.fields.peersConnected; },
     getPeersGettingFromUs: function() { return this.fields.peersGettingFromUs; },
@@ -276,9 +276,9 @@ Torrent.prototype =
             var announce = tracker.announce;
             var uri = parseUri(announce);
             uri.domain = transmission.getDomainName (uri.host);
-            if (trakt.user.showTracker.indexOf(uri.domain) >= 0)
+            if (trakt.config.trackers.shows.indexOf(uri.domain) >= 0)
                 mediaType = "shows";
-            else if(trakt.user.movieTracker.indexOf(uri.domain) >= 0)
+            else if(trakt.config.trackers.movies.indexOf(uri.domain) >= 0)
                 mediaType = "movies";
         });
         if (mediaType)
